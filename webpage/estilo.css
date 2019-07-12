@@ -1,0 +1,49 @@
+div.abertura {
+    width: 100%
+}
+
+video.abertura {
+    height: 900px;
+    width: 100%;
+    overflow: hidden;
+    object-fit: contain;
+}
+
+div.sobre-video {
+    position: absolute;
+    bottom: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 620px;
+}
+
+div.sobre-video h1 {
+    font-size: 4rem;
+    margin: 0;
+    line-height: 1.2;
+}
+
+div.sobre-video h2 {
+    font-weight: normal;
+    color: #333;
+    margin: 0;
+}
+
+body {
+    font-family: 'PT Serif', serif;
+}
+
+div.content {
+    width: 100%;
+}
+
+div.content div.destaque {
+    background-color: #333;
+    padding: 1em 0;
+    color: lightcoral;
+}
+
+div.content p {
+    max-width: 620px;
+    margin: 1em auto;
+}
