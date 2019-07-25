@@ -1,5 +1,5 @@
-div.abertura {
-    width: 100%
+header.abertura {
+    max-width: 100%
 }
 
 video.abertura {
@@ -33,17 +33,13 @@ body {
     font-family: 'PT Serif', serif;
 }
 
-div.content {
-    width: 100%;
-}
-
-div.content div.destaque {
+section.destaque p {
     background-color: #333;
     padding: 1em 0;
     color: lightcoral;
 }
 
-div.content p {
+section.content p {
     max-width: 620px;
-    margin: 1em auto;
+    margin: 1em auto 0;
 }
