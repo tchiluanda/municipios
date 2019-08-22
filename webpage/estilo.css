@@ -1,5 +1,6 @@
 header.abertura {
-    max-width: 100%
+    max-width: 100%;
+    font-family: 'Montserrat';
 }
 
 video.abertura {
@@ -30,7 +31,7 @@ div.sobre-video h2 {
 }
 
 body {
-    font-family: 'PT Serif', serif;
+    font-family: 'Arvo', serif;
 }
 
 section.destaque p {
