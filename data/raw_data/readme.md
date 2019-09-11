@@ -18,7 +18,7 @@ Perfil_Municipios, 2017, Base_de_Dados
 
 * "arrecadacao-da-receita-administrada-pela-rfb-por-municipio-2018.xlsx"
 https://receita.economia.gov.br/dados/receitadata/arrecadacao/copy_of_arrecadacao-das-receitas-administradas-pela-rfb-por-municipio/arrecadacao-por-municipios
-Receitas Administradas pela RFB, Per�odo: 2018
+Receitas Administradas pela RFB, Período: 2018
 
 ## Dados do Siconfi
 
