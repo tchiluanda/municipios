@@ -25,13 +25,12 @@ header img.logo-tt {
 
 header div.sobre-imagem {
     position: absolute;
-    max-width: 680px;
+    max-width: 40rem;
     margin: 0 auto;
     left: 0;
     right: 0;
     bottom: 5px;
     /*margin: 2em auto 0 auto;*/
-    font-family: 'Merriweather Sans', sans-serif;
 }
 
 header img.abertura {
@@ -44,6 +43,7 @@ header div.sobre-imagem h1 {
     text-align: center;
     line-height: 1.2;
     color: #333; 
+    font-family: 'Merriweather Sans', sans-serif;
 }
 
 header div.sobre-imagem h2 {
