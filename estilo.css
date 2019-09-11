@@ -61,7 +61,7 @@ header div.sobre-imagem p {
 
 section.content {
     color: rgb(59,55,52);
-    max-width: 680px;
+    max-width: 40rem; /*680px*/
     font-size: 16px;
     line-height: 1.6;
     margin-left: auto;
