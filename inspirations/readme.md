@@ -8,6 +8,13 @@ Abertura, uso de ilustrações. Width de 40rem, como é o hábito do Russell.
 
 https://pudding.cool/2019/03/pop-music/
 
+### Estadao
+
+Width de 640px
+
+https://arte.estadao.com.br/brasil/adocao/criancas/
+
+
 ## Gráficos
 
 ### Jim Valladingham's connected scatterplots
