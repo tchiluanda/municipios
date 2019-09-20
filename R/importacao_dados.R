@@ -87,6 +87,8 @@ raw_mun_arrec_fed <- read_excel("./data/raw_data/arrecadacao-da-receita-administ
 
 # Siconfi -----------------------------------------------------------------
 
-
+arq <- arq %>%
+  select(-`CO-MUNICIPIO`) %>%
+  mutate(indicador = 1)
 
 
