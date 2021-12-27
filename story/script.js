@@ -11,6 +11,7 @@ const v = {
 
         w  : null,
         h : null,
+        margin: 20,
 
         get : () => {
     
@@ -37,11 +38,50 @@ const v = {
 
     },
 
+    data : {
+
+        file : 'data.json',
+
+        raw : null,
+
+        read : () => {
+
+            fetch(v.data.file)
+            .then(response => { 
+                
+              if (!response.ok) {
+                  throw new Error(`HTTP error! status: ${response.status}`);
+              }
+              //console.log(response.status);
+              return response.json()
+
+            })
+            .then(data => {
+
+                v.ctrl.data_is_loaded(data);
+
+            })
+
+        }
+
+    },
+
+    ctrl : {
+
+        data_is_loaded : (data) => {
+
+            console.table(data.filter( (d,i) => i < 30 ));
+
+        }
+
+    },
+
     init : () => {
 
         v.sizings.get();
         v.sizings.set();
-
+        v.data.read();
+        // daqui pula para v.ctrl.data_is_loaded
 
     }
 
