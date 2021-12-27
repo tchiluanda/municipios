@@ -159,7 +159,7 @@ const v = {
             return d3.geoMercator()
               .center([-55, -15])
               //.rotate([10, 0])
-              .scale(400)
+              .scale(650)
               .translate([w / 2, h / 2])
 
         },
@@ -176,11 +176,9 @@ const v = {
             const paths = feats.map(estado => d3.geoPath().projection(proj)(estado));
             v.map.paths = paths;
 
-            console.log(paths);
-
         },
 
-        render : () => {
+        render_map : () => {
 
             const ctx = v.vis.ctx;
 
@@ -189,10 +187,67 @@ const v = {
             paths.forEach(path => {
 
                 let p = new Path2D(path);
-                ctx.lineStyle = 'black';
+                ctx.lineWidth = 1;
+                ctx.globalAlpha = 1;
+                ctx.lineStyle = '#aaa';
                 ctx.stroke(p);
 
             }) 
+
+        },
+
+        calcula_posicoes_mun : () => {
+
+            let data = v.data.raw.mun;
+
+            let feats = data.features;
+
+            let proj = v.map.proj();
+
+            v.data.nodes.forEach( (d,i) => {
+
+                d.x0 = proj(feats[i].geometry.coordinates)[0];
+                d.x  = proj(feats[i].geometry.coordinates)[0];
+                d.y0 = proj(feats[i].geometry.coordinates)[1];
+                d.y  = proj(feats[i].geometry.coordinates)[1];
+
+            }) 
+
+        },
+
+        render_mun : () => {
+
+            const ctx = v.vis.ctx;
+
+            const { w , h , margin } = v.sizings;
+
+            ctx.clearRect(0, 0, w, h);
+            v.map.render_map();
+
+            const colors = [
+                "#C7A76C", "#99B56B", "#5CBD92", "#3BBCBF", "#7DB0DD"
+            ]
+
+            const points = v.data.nodes;
+
+            points.forEach( (municipio, i) => {
+
+                const { x, y, code_region } = municipio;
+
+                const color_index = +code_region - 1;
+
+                ctx.fillStyle = colors[color_index]//"coral";
+                ctx.lineStyle = 'grey';
+                ctx.globalAlpha = 1;
+
+                ctx.beginPath();
+                ctx.arc(x, y, 1, 0, Math.PI*2, true);
+                ctx.fill();
+                ctx.globalAlpha = .5;
+                //ctx.stroke();
+                ctx.closePath();
+
+            })
 
 
         }
@@ -285,6 +340,7 @@ const v = {
             //v.sim.start();
 
             v.map.calcula_paths();
+            v.map.calcula_posicoes_mun();
             //v.vis.render();
 
         }
