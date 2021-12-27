@@ -147,6 +147,59 @@ const v = {
 
     },
 
+    map : {
+
+        paths : null,
+
+        proj : () => {
+
+            let h = v.sizings.h;
+            let w = v.sizings.w;
+            
+            return d3.geoMercator()
+              .center([-55, -15])
+              //.rotate([10, 0])
+              .scale(400)
+              .translate([w / 2, h / 2])
+
+        },
+
+        calcula_paths : () => {
+    
+            let data = v.data.raw.map;
+
+            let feats = data.features;
+
+
+            let proj = v.map.proj();
+
+            const paths = feats.map(estado => d3.geoPath().projection(proj)(estado));
+            v.map.paths = paths;
+
+            console.log(paths);
+
+        },
+
+        render : () => {
+
+            const ctx = v.vis.ctx;
+
+            const paths = v.map.paths;
+
+            paths.forEach(path => {
+
+                let p = new Path2D(path);
+                ctx.lineStyle = 'black';
+                ctx.stroke(p);
+
+            }) 
+
+
+        }
+
+
+    },
+
     vis : {
         
         ctx : null,
@@ -228,8 +281,10 @@ const v = {
             v.data.nodes = data[0].features.map(d => d.properties);
             v.data.info.get();
             v.scales.set();
-            v.sim.set();
-            v.sim.start();
+            //v.sim.set();
+            //v.sim.start();
+
+            v.map.calcula_paths();
             //v.vis.render();
 
         }
