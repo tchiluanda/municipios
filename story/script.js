@@ -341,7 +341,10 @@ const v = {
 
             v.map.calcula_paths();
             v.map.calcula_posicoes_mun();
-            //v.vis.render();
+            v.map.render_mun();
+
+            v.sim.set();
+            v.sim.start();
 
         }
 
