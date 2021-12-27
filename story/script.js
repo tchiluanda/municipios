@@ -131,6 +131,7 @@ const v = {
               .force('collision', d3.forceCollide().radius(2))
               //.alphaMin(0.25)
               .on('tick', v.vis.render)
+              //.on('end', v.vis.render)
               //.stop()
             ;
 
@@ -168,16 +169,23 @@ const v = {
                 const { x, y, REGIAO } = municipio;
 
                 ctx.fillStyle = "coral";
-                ctx.lineStyle = 'gray';
+                ctx.lineStyle = 'grey';
                 ctx.globalAlpha = 1;
 
                 ctx.beginPath();
                 ctx.arc(x, y, 2, 0, Math.PI*2, true);
                 ctx.fill();
+                ctx.globalAlpha = .5;
                 ctx.stroke();
                 ctx.closePath();
 
             })
+
+            ctx.globalAlpha = 1;
+            ctx.beginPath();       // Start a new path
+            ctx.moveTo(v.scales.x(60000), margin);    // Move the pen to (30, 50)
+            ctx.lineTo(v.scales.x(60000), h - margin);  // Draw a line to (150, 100)
+            ctx.stroke(); 
 
         }
 
@@ -195,6 +203,7 @@ const v = {
             v.scales.set();
             v.sim.set();
             v.sim.start();
+            //v.vis.render();
 
         }
 
