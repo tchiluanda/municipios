@@ -103,3 +103,8 @@ ggplot(raw_mun_perfil) + geom_beeswarm(aes(x = `POP EST`, y = 0), groupOnX = FAL
 exp <- raw_mun_perfil %>% select(REGIAO, NOME = `NOME MUNIC`, POP = `POP EST`)
 
 jsonlite::write_json(exp, './story/data.json')
+
+exp %>% filter(POP <= 60000) %>% nrow() / nrow(exp)
+
+
+
