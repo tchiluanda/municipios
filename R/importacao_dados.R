@@ -1,5 +1,6 @@
 library(tidyverse)
 library(readxl)
+library(ggbeeswarm)
 
 # Perfil dos municípios ---------------------------------------------------
 
@@ -90,3 +91,15 @@ raw_mun_arrec_fed <- read_excel("./data/raw_data/arrecadacao-da-receita-administ
 
 
 
+# Explorações -----------------------------------------------------------
+
+ggplot(raw_mun_perfil) + geom_beeswarm(aes(x = `POP EST`, y = 0), groupOnX = FALSE)
+
+
+
+
+# Exportação --------------------------------------------------------------
+
+exp <- raw_mun_perfil %>% select(REGIAO, NOME = `NOME MUNIC`, POP = `POP EST`)
+
+jsonlite::write_json(exp, './story/data.json')
