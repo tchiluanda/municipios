@@ -241,7 +241,7 @@ const v = {
                 ctx.globalAlpha = 1;
 
                 ctx.beginPath();
-                ctx.arc(x, y, 1, 0, Math.PI*2, true);
+                ctx.arc(x, y, 2, 0, Math.PI*2, true);
                 ctx.fill();
                 ctx.globalAlpha = .5;
                 //ctx.stroke();
@@ -293,7 +293,7 @@ const v = {
                 ctx.arc(x, y, 2, 0, Math.PI*2, true);
                 ctx.fill();
                 ctx.globalAlpha = .5;
-                ctx.stroke();
+                //ctx.stroke();
                 ctx.closePath();
 
             })
@@ -325,6 +325,33 @@ const v = {
 
     },
 
+    interactions : {
+
+        alterna : {
+
+            ref : '#btn-beeswarm',
+
+            monitora : () => {
+
+                const btn = document.querySelector(v.interactions.alterna.ref);
+
+                btn.addEventListener('click', v.interactions.alterna.atua);
+
+            },
+
+            atua : (e) => {
+
+                console.log(e.target.id);
+
+                v.sim.set();
+                v.sim.start();
+
+            }
+
+        }
+
+    },
+
     ctrl : {
 
         data_is_loaded : (data) => {
@@ -343,8 +370,7 @@ const v = {
             v.map.calcula_posicoes_mun();
             v.map.render_mun();
 
-            v.sim.set();
-            v.sim.start();
+            v.interactions.alterna.monitora();
 
         }
 
