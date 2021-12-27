@@ -11,7 +11,7 @@ const v = {
 
         w  : null,
         h : null,
-        margin: 20,
+        margin: 80,
 
         get : () => {
     
@@ -44,6 +44,22 @@ const v = {
 
         raw : null,
 
+        info : {
+
+            max_pop : null,
+            min_pop : null,
+
+            get : () => {
+
+                const data = v.data.raw.map(d => d.POP);
+
+                v.data.info.max_pop = Math.max(...data);
+                v.data.info.min_pop = Math.min(...data);
+
+            }
+
+        },
+
         read : () => {
 
             fetch(v.data.file)
@@ -66,11 +82,119 @@ const v = {
 
     },
 
+    scales : {
+
+        /*x : (pop) => {
+
+            const {w, h, margin} = v.sizings;
+
+            const max = v.data.info.max_pop;
+
+            return margin + (w - 2*margin) * (pop / max);
+
+
+
+        }*/
+
+        x : d3.scaleLog(),
+        
+        set : () => {
+
+            const {w, h, margin} = v.sizings;
+
+            const max = v.data.info.max_pop;
+            const min = v.data.info.min_pop;
+
+            v.scales.x
+              .range([margin, w - margin])
+              .domain([min, max])
+
+        }
+
+
+    },
+
+    sim : {
+
+        simulation : d3.forceSimulation().stop(),
+
+        set : () => {
+
+            const strength = 0.04;
+            const x = v.scales.x;
+            const y0 = v.sizings.h/2
+
+            v.sim.simulation
+              .velocityDecay(0.2)
+              .force('x', d3.forceX().strength(strength).x(d => x(d.POP)))
+              .force('y', d3.forceY().strength(strength).y(y0))
+              .force('collision', d3.forceCollide().radius(2))
+              //.alphaMin(0.25)
+              .on('tick', v.vis.render)
+              //.stop()
+            ;
+
+            v.sim.simulation.nodes(v.data.raw);
+
+        },
+
+        start : () => v.sim.simulation.alpha(1).restart()
+
+
+    },
+
+    vis : {
+        
+        ctx : null,
+
+        set_context : () => {
+
+            const cv = document.querySelector(v.refs.canvas);
+            v.vis.ctx= cv.getContext('2d');
+        },
+
+        render : () => {
+
+            const ctx = v.vis.ctx;
+
+            const { w , h , margin } = v.sizings;
+
+            ctx.clearRect(0, 0, w, h);
+
+            const points = v.data.raw;
+
+            points.forEach( (municipio, i) => {
+
+                const { x, y, REGIAO } = municipio;
+
+                ctx.fillStyle = "coral";
+                ctx.lineStyle = 'gray';
+                ctx.globalAlpha = 1;
+
+                ctx.beginPath();
+                ctx.arc(x, y, 2, 0, Math.PI*2, true);
+                ctx.fill();
+                ctx.stroke();
+                ctx.closePath();
+
+            })
+
+        }
+
+
+    },
+
     ctrl : {
 
         data_is_loaded : (data) => {
 
             console.table(data.filter( (d,i) => i < 30 ));
+
+            v.data.raw = data;
+            v.data.info.get();
+            v.scales.set();
+            v.sim.set();
+            v.sim.start();
 
         }
 
@@ -80,6 +204,7 @@ const v = {
 
         v.sizings.get();
         v.sizings.set();
+        v.vis.set_context();
         v.data.read();
         // daqui pula para v.ctrl.data_is_loaded
 
