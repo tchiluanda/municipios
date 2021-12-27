@@ -188,9 +188,25 @@ const v = {
             })
 
             ctx.globalAlpha = 1;
+
             ctx.beginPath();       // Start a new path
-            ctx.moveTo(v.scales.x(60000), margin);    // Move the pen to (30, 50)
-            ctx.lineTo(v.scales.x(60000), h - margin);  // Draw a line to (150, 100)
+            ctx.moveTo(v.scales.x(5000), margin);    // Move the pen to (30, 50)
+            ctx.lineTo(v.scales.x(5000), h - margin);  // Draw a line to (150, 100)
+            ctx.stroke(); 
+
+            ctx.beginPath();       // Start a new path
+            ctx.moveTo(v.scales.x(50000), margin);    // Move the pen to (30, 50)
+            ctx.lineTo(v.scales.x(50000), h - margin);  // Draw a line to (150, 100)
+            ctx.stroke(); 
+
+            ctx.beginPath();       // Start a new path
+            ctx.moveTo(v.scales.x(500000), margin);    // Move the pen to (30, 50)
+            ctx.lineTo(v.scales.x(500000), h - margin);  // Draw a line to (150, 100)
+            ctx.stroke(); 
+
+            ctx.beginPath();       // Start a new path
+            ctx.moveTo(v.scales.x(5000000), margin);    // Move the pen to (30, 50)
+            ctx.lineTo(v.scales.x(5000000), h - margin);  // Draw a line to (150, 100)
             ctx.stroke(); 
 
         }
@@ -202,7 +218,7 @@ const v = {
 
         data_is_loaded : (data) => {
 
-            console.table(data.filter( (d,i) => i < 30 ));
+            //console.table(data.filter( (d,i) => i < 30 ));
 
             v.data.raw = data;
             v.data.info.get();
