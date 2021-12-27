@@ -162,13 +162,19 @@ const v = {
 
             ctx.clearRect(0, 0, w, h);
 
+            const colors = [
+                "#C7A76C", "#99B56B", "#5CBD92", "#3BBCBF", "#7DB0DD"
+            ]
+
             const points = v.data.raw;
 
             points.forEach( (municipio, i) => {
 
                 const { x, y, REGIAO } = municipio;
 
-                ctx.fillStyle = "coral";
+                const color_index = +municipio.REGIAO.slice(0,1) - 1;
+
+                ctx.fillStyle = colors[color_index]//"coral";
                 ctx.lineStyle = 'grey';
                 ctx.globalAlpha = 1;
 
