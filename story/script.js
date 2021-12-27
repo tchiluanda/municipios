@@ -40,9 +40,16 @@ const v = {
 
     data : {
 
-        file : 'data.json',
+        files : ['data.json', 'estados.json'],
 
-        raw : null,
+        raw : {
+
+            mun : null,
+            map : null,
+
+        },
+
+        nodes : null,
 
         info : {
 
@@ -51,7 +58,7 @@ const v = {
 
             get : () => {
 
-                const data = v.data.raw.map(d => d.POP);
+                const data = v.data.nodes.map(d => d.pop);
 
                 v.data.info.max_pop = Math.max(...data);
                 v.data.info.min_pop = Math.min(...data);
@@ -62,16 +69,12 @@ const v = {
 
         read : () => {
 
-            fetch(v.data.file)
-            .then(response => { 
-                
-              if (!response.ok) {
-                  throw new Error(`HTTP error! status: ${response.status}`);
-              }
-              //console.log(response.status);
-              return response.json()
-
-            })
+            Promise.all(
+                [
+                    fetch(v.data.files[0]).then(response => response.json()),
+                    fetch(v.data.files[1]).then(response => response.json())
+                ]
+            )
             .then(data => {
 
                 v.ctrl.data_is_loaded(data);
@@ -126,7 +129,7 @@ const v = {
 
             v.sim.simulation
               .velocityDecay(0.2)
-              .force('x', d3.forceX().strength(strength).x(d => x(d.POP)))
+              .force('x', d3.forceX().strength(strength).x(d => x(d.pop)))
               .force('y', d3.forceY().strength(strength).y(y0))
               .force('collision', d3.forceCollide().radius(2))
               //.alphaMin(0.25)
@@ -135,7 +138,7 @@ const v = {
               //.stop()
             ;
 
-            v.sim.simulation.nodes(v.data.raw);
+            v.sim.simulation.nodes(v.data.nodes);
 
         },
 
@@ -166,13 +169,13 @@ const v = {
                 "#C7A76C", "#99B56B", "#5CBD92", "#3BBCBF", "#7DB0DD"
             ]
 
-            const points = v.data.raw;
+            const points = v.data.nodes;
 
             points.forEach( (municipio, i) => {
 
-                const { x, y, REGIAO } = municipio;
+                const { x, y, code_region } = municipio;
 
-                const color_index = +municipio.REGIAO.slice(0,1) - 1;
+                const color_index = +code_region - 1;
 
                 ctx.fillStyle = colors[color_index]//"coral";
                 ctx.lineStyle = 'grey';
@@ -220,7 +223,9 @@ const v = {
 
             //console.table(data.filter( (d,i) => i < 30 ));
 
-            v.data.raw = data;
+            v.data.raw.mun = data[0];
+            v.data.raw.map = data[1];
+            v.data.nodes = data[0].features.map(d => d.properties);
             v.data.info.get();
             v.scales.set();
             v.sim.set();
