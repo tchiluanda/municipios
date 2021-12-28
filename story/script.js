@@ -133,8 +133,16 @@ const v = {
               .force('y', d3.forceY().strength(strength).y(y0))
               .force('collision', d3.forceCollide().radius(2))
               //.alphaMin(0.25)
-              .on('tick', v.vis.render)
-              //.on('end', v.vis.render)
+              //.on('tick', v.vis.render)
+              .on('end', () => {
+                  v.data.nodes.forEach(d => {
+                      d.xf = d.x;
+                      d.yf = d.y;
+                  })
+
+                  console.log('terminei.');
+
+              })
               //.stop()
             ;
 
@@ -267,11 +275,16 @@ const v = {
 
         render : () => {
 
+            const modo = v.ctrl.state;
+            console.log(modo);
+
             const ctx = v.vis.ctx;
 
             const { w , h , margin } = v.sizings;
 
             ctx.clearRect(0, 0, w, h);
+
+            if (modo == 'map') v.map.render_map();
 
             const colors = [
                 "#C7A76C", "#99B56B", "#5CBD92", "#3BBCBF", "#7DB0DD"
@@ -298,53 +311,97 @@ const v = {
 
             })
 
-            ctx.globalAlpha = 1;
+            if (modo == 'bee') {
 
-            ctx.beginPath();       // Start a new path
-            ctx.moveTo(v.scales.x(5000), margin);    // Move the pen to (30, 50)
-            ctx.lineTo(v.scales.x(5000), h - margin);  // Draw a line to (150, 100)
-            ctx.stroke(); 
+                ctx.globalAlpha = 1;
 
-            ctx.beginPath();       // Start a new path
-            ctx.moveTo(v.scales.x(50000), margin);    // Move the pen to (30, 50)
-            ctx.lineTo(v.scales.x(50000), h - margin);  // Draw a line to (150, 100)
-            ctx.stroke(); 
+                ctx.beginPath();       // Start a new path
+                ctx.moveTo(v.scales.x(5000), margin);    // Move the pen to (30, 50)
+                ctx.lineTo(v.scales.x(5000), h - margin);  // Draw a line to (150, 100)
+                ctx.stroke(); 
+    
+                ctx.beginPath();       // Start a new path
+                ctx.moveTo(v.scales.x(50000), margin);    // Move the pen to (30, 50)
+                ctx.lineTo(v.scales.x(50000), h - margin);  // Draw a line to (150, 100)
+                ctx.stroke(); 
+    
+                ctx.beginPath();       // Start a new path
+                ctx.moveTo(v.scales.x(500000), margin);    // Move the pen to (30, 50)
+                ctx.lineTo(v.scales.x(500000), h - margin);  // Draw a line to (150, 100)
+                ctx.stroke(); 
+    
+                ctx.beginPath();       // Start a new path
+                ctx.moveTo(v.scales.x(5000000), margin);    // Move the pen to (30, 50)
+                ctx.lineTo(v.scales.x(5000000), h - margin);  // Draw a line to (150, 100)
+                ctx.stroke(); 
 
-            ctx.beginPath();       // Start a new path
-            ctx.moveTo(v.scales.x(500000), margin);    // Move the pen to (30, 50)
-            ctx.lineTo(v.scales.x(500000), h - margin);  // Draw a line to (150, 100)
-            ctx.stroke(); 
+            }
 
-            ctx.beginPath();       // Start a new path
-            ctx.moveTo(v.scales.x(5000000), margin);    // Move the pen to (30, 50)
-            ctx.lineTo(v.scales.x(5000000), h - margin);  // Draw a line to (150, 100)
-            ctx.stroke(); 
+
 
         }
 
 
     },
 
+    anim : {
+
+        get_future_value : (i, target, param ) => target[param],
+
+        to_map : () => gsap.to(
+            v.data.nodes,
+            {
+                x : (i, target) => v.anim.get_future_value(i, target, 'x0'),
+                y : (i, target) => v.anim.get_future_value(i, target, 'y0'),
+                onUpdate : v.vis.render
+
+            }
+
+        ),
+
+        to_beeswarm : () => gsap.to(
+            v.data.nodes,
+            {
+                x : (i, target) => v.anim.get_future_value(i, target, 'xf'),
+                y : (i, target) => v.anim.get_future_value(i, target, 'yf'),
+                onUpdate : v.vis.render
+
+            }
+
+        )
+
+    },
+
     interactions : {
 
-        alterna : {
+        botoes_modo : {
 
-            ref : '#btn-beeswarm',
+            ref : '.btns-mode',
 
             monitora : () => {
 
-                const btn = document.querySelector(v.interactions.alterna.ref);
+                const btns = document.querySelectorAll(v.interactions.botoes_modo.ref);
 
-                btn.addEventListener('click', v.interactions.alterna.atua);
+                btns.forEach(btn => btn.addEventListener('click', v.interactions.botoes_modo.atua));
 
             },
 
             atua : (e) => {
 
-                console.log(e.target.id);
+                const id = e.target.id
 
-                v.sim.set();
-                v.sim.start();
+                if (id == "btn-mapa") {
+                    v.ctrl.state = 'map';
+                    v.anim.to_map();
+                }
+
+                if (id == "btn-beeswarm") {
+                    v.ctrl.state = 'bee';
+                    v.anim.to_beeswarm();
+                }
+
+                //v.sim.set();
+                //v.sim.start();
 
             }
 
@@ -353,6 +410,8 @@ const v = {
     },
 
     ctrl : {
+
+        state : 'map',
 
         data_is_loaded : (data) => {
 
@@ -363,14 +422,15 @@ const v = {
             v.data.nodes = data[0].features.map(d => d.properties);
             v.data.info.get();
             v.scales.set();
-            //v.sim.set();
-            //v.sim.start();
+
+            v.sim.set();
+            v.sim.start();
 
             v.map.calcula_paths();
             v.map.calcula_posicoes_mun();
             v.map.render_mun();
 
-            v.interactions.alterna.monitora();
+            v.interactions.botoes_modo.monitora();
 
         }
 
