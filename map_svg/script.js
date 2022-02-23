@@ -272,7 +272,7 @@ const v = {
 
             svg.selectAll("path")
             .transition()
-            .delay((d,i) => (i % 100) * 100)
+            //.delay((d,i) => (i % 100) * 100)
             .duration(5000)
             .attrTween('d', function(d, i) {
               return flubber.toCircle(path(d), proj([d.properties.xc, d.properties.yc])[0], proj([d.properties.xc, d.properties.yc])[1], r(d.properties.pop), {maxSegmentLength: 2});
