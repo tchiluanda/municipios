@@ -77,7 +77,14 @@ for (i in 1:nrow(mun_data)) {
 mun_data$xc <- centers$xc
 mun_data$yc <- centers$yc
 
-mun_areas <- st_simplify(mun_data,  preserveTopology = TRUE, dTolerance = .1)
+library(rmapshaper)
+
+#write_file(sf_geojson(mun_data, simplify = FALSE, digits = 6), './map_svg/areas_full.json')
+
+# https://geocompr.robinlovelace.net/geometric-operations.html
+mun_areas <- rmapshaper::ms_simplify(mun_data, keep = 0.02,
+                        keep_shapes = TRUE)
+#mun_areas <- st_simplify(mun_data, preserveTopology = TRUE, dTolerance = .25)
 
 mun_plot <- mun_areas %>%
   mutate(pop_cat =  cut(pop, c(0, 55000, 430000, Inf), c('Pequeno', 'Médio', 'Grande')))
@@ -97,8 +104,8 @@ ggplot(mun_plot) +
         strip.background = element_rect(fill = 'transparent', color = NA),
     strip.text.x = element_text(margin = margin(t= 2, r = 0, b = 2, l = 0, unit  = "pt")))
 
-ggplot(mun_plot %>% filter(name_muni%in%c("Borborema","Brasília"))) + 
-  geom_sf(color = "khaki", fill = 'khaki')
+ggplot(mun_areas %>% filter(name_muni%in%c("Borborema", "João Pessoa"), abbrev_state=="PB")) + 
+  geom_sf(color = "firebrick", fill = 'khaki')
 
 ggsave('mapa-tercos.png', plot=last_plot(), width = 12.9, height = 4)
 
