@@ -126,26 +126,44 @@ const v = {
         set : () => {
 
             const strength = 0.04;
-            const x = v.scales.x;
-            const y0 = v.sizings.h/2
+            //const x = v.scales.x;
+            //const y0 = v.sizings.h/2
+
+            v.data.nodes = v.data.raw.map;//.features;
+            let proj = v.map.proj();
+
+            const max_pop = d3.max(v.data.nodes, d => d.properties.pop);
+
+            const r = d3.scaleSqrt()
+              .domain([0, max_pop])
+              .range([1, 20]) 
+            ;
+
+            v.data.nodes.forEach(d => {
+
+                d.x0 = proj([d.properties.xc, d.properties.yc])[0];
+                d.x  = proj([d.properties.xc, d.properties.yc])[0];
+                d.y0 = proj([d.properties.xc, d.properties.yc])[1];
+                d.y  = proj([d.properties.xc, d.properties.yc])[1];
+                d.r = r(d.properties.pop);
+
+            })
 
             v.sim.simulation
               .velocityDecay(0.2)
-              .force('x', d3.forceX().strength(strength).x(d => x(d.pop)))
-              .force('y', d3.forceY().strength(strength).y(y0))
-              .force('collision', d3.forceCollide().radius(2))
-              //.alphaMin(0.25)
-              //.on('tick', v.vis.render)
-              .on('end', () => {
-                  v.data.nodes.forEach(d => {
-                      d.xf = d.x;
-                      d.yf = d.y;
-                  })
+              .force('x', d3.forceX().strength(strength).x(d => d.x0))
+              .force('y', d3.forceY().strength(strength).y(d => d.y0))
+              .force('collision', d3.forceCollide().strength(strength*1.5).radius(d => d.r))
+              .alphaMin(0.02)
+              .on('tick', () => {
 
-                  console.log('terminei.');
+                d3.selectAll('circle')
+                  .attr('cx', d => d.x)
+                  .attr('cy', d => d.y);
 
               })
-              //.stop()
+              .on('end', () => {console.log('terminou')})
+              .stop()
             ;
 
             v.sim.simulation.nodes(v.data.nodes);
@@ -174,6 +192,8 @@ const v = {
 
         },
 
+        /*
+
         calcula_paths : () => {
     
             let data = v.data.raw.map;
@@ -185,13 +205,13 @@ const v = {
             const paths = feats.map(estado => d3.geoPath().projection(proj)(estado));
             v.map.paths = paths;
 
-        },
+        },*/
 
         render_map : () => {
 
             const svg = d3.select('svg');
 
-            const data = v.data.raw.map.features;
+            const data = v.data.raw.map;//.features;
 
             let proj = v.map.proj();
 
@@ -201,18 +221,10 @@ const v = {
               .selectAll("path")
               .data(data)
               .join("path")
-                .attr('data-id', d => d.properties.name_muni)
+                .attr('data-nome', d => d.properties.name_muni)
+                .attr('data-uf', d => d.properties.abbrev_state)
                 .attr("stroke", "transparent")
-                .attr('fill', function(d) {
-                    if (d.properties.name_muni == 'Borborema') return 'transparent'
-                    else {
-                        if (d.properties.pop >= 500000) return 'firebrick'
-                        else {
-                            if (d.properties.pop >= 50000) return 'darkgreen';
-                            else return 'khaki'
-                        }
-                    }
-                })
+                .attr('fill', 'khaki')
                 .attr("d", path)
               .append("title")
                 .text(d => d.properties.name_muni)
@@ -224,7 +236,7 @@ const v = {
 
             const svg = d3.select('svg');
 
-            const data = v.data.raw.map.features;
+            const data = v.data.nodes;//v.data.raw.map.features;
             let proj = v.map.proj();
 
             const path = d3.geoPath().projection(proj);
@@ -257,7 +269,7 @@ const v = {
 
             const svg = d3.select('svg');
 
-            const data = v.data.raw.map.features;
+            const data = v.data.raw.map;//.features;
 
             let proj = v.map.proj();
 
@@ -503,21 +515,22 @@ const v = {
 
             //console.table(data.filter( (d,i) => i < 30 ));
 
-            v.data.raw.map = data[0];
+            v.data.raw.map = data[0].features.slice(0,300);
             //v.data.raw.map = data[1];
             //v.data.nodes = data[0].features.map(d => d.properties);
             //v.data.info.get();
             //v.scales.set();
 
-            //v.sim.set();
-            //v.sim.start();
+            v.sim.set();
+
 
             //v.map.calcula_paths();
             //v.map.calcula_posicoes_mun();
 
 
-            v.map.render_map();
-            //v.map.render_bubbles();
+            //v.map.render_map();
+            v.map.render_bubbles();
+            //v.sim.start();
 
             //v.interactions.botoes_modo.monitora();
 
