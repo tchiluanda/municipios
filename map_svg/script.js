@@ -1,3 +1,20 @@
+/* 
+  LIMPAR ESTE CÓDIGO! 
+
+1. Calcula a projeção
+2. Atribui os valores das posições dos centros dos municípios ("administrative seats", segundo o GeoBR) às variáveis x, x0, y, y0, que serão usadas pela simulação. Já calcula o r também.
+2. Cria a simulação, considerando um raio, com forceCollide. Roda a simulação (posições finais agora serão d.x, d.y)
+2. Sempre lembrar: MARCAS VISUAIS <----> DADO <----> SIMULACAO
+3. Se quiser visualizar o mapa de bolhas, pode usar o map.render_bubble (para ver as posicoes originais, cx: d.x0, cy: d.y0; para as finais, d.x, d.y -- dá para fazer transições simples entre elas também (com a simulação finalizada))
+4. Renderiza o mapa com polígonos.
+5. Usa flubber para transformar poligonos em círculos, usando como centro d.x, d.y.
+6. Usa flubber para transformar ciculos em poligonos.
+
+*/
+
+
+
+
 const v = {
 
     refs : {
@@ -577,6 +594,7 @@ const v = {
             //v.scales.set();
 
             v.sim.set();
+            v.sim.start();
 
 
             //v.map.calcula_paths();
@@ -585,7 +603,6 @@ const v = {
 
             v.map.render_map();
             //v.map.render_bubbles();
-            //v.sim.start();
 
             //v.interactions.botoes_modo.monitora();
 
