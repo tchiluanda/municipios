@@ -78,7 +78,32 @@ mun_data$xc <- centers$xc
 mun_data$yc <- centers$yc
 
 mun_areas <- st_simplify(mun_data,  preserveTopology = TRUE, dTolerance = .1)
-ggplot(mun_areas) + geom_sf()
+
+mun_plot <- mun_areas %>%
+  mutate(pop_cat =  cut(pop, c(0, 55000, 430000, Inf), c('Pequeno', 'Médio', 'Grande')))
+
+
+ggplot(mun_plot) + 
+  geom_sf(fill = "khaki", color = 'khaki') + 
+  facet_wrap(~pop_cat, labeller = as_labeller(
+    c('Pequeno' = 'Aqui mora um terço do país,', 
+      'Médio' = 'aqui mora outro terço,', 
+      'Grande' = 'e aqui mora o terço restante.'))) + 
+  theme_void() +
+  theme(
+    text = element_text(family = "Inter", size = 14, color = 'khaki'),
+    plot.background = element_rect(fill = 'dodgerblue', color = NA),
+        panel.background = element_rect(fill = 'transparent', color = NA),
+        strip.background = element_rect(fill = 'transparent', color = NA),
+    strip.text.x = element_text(margin = margin(t= 2, r = 0, b = 2, l = 0, unit  = "pt")))
+
+ggplot(mun_plot %>% filter(name_muni%in%c("Borborema","Brasília"))) + 
+  geom_sf(color = "khaki", fill = 'khaki')
+
+ggsave('mapa-tercos.png', plot=last_plot(), width = 12.9, height = 4)
+
+mun_plot%>%as.data.frame()%>%group_by(pop_cat)%>%summarise(pop = sum(pop))
+mun_plot%>%as.data.frame()%>%count(pop_cat)
 
 mun_areas_geojson <- sf_geojson(mun_areas, simplify = TRUE, digits = 6)
 
