@@ -155,6 +155,7 @@ const v = {
               //.force('y', d3.forceY().strength(strength).y(d => d.y0))
               .force('collision', d3.forceCollide().strength(strength*1.5).radius(d => d.r))
               .alphaMin(0.2)
+              /* comentando para não movimentar as bolhas enquanto atualiza
               .on('tick', () => {
 
                 d3.selectAll('circle')
@@ -162,6 +163,7 @@ const v = {
                   .attr('cy', d => d.y);
 
               })
+              */
               .on('end', () => {console.log('terminou')})
               .stop()
             ;
@@ -171,6 +173,17 @@ const v = {
         },
 
         start : () => v.sim.simulation.alpha(1).restart()
+
+        /* dá para finalizar a simulação e mover as bolhas assim:
+        d3.selectAll('circle').transition().duration(2000).attr('cx', d => d.x0).attr('cy', d => d.y0);
+
+        d3.selectAll('circle').transition().duration(2000).attr('cx', d => d.x).attr('cy', d => d.y);
+
+        aí tira o 'on('tick')
+
+
+
+        */
 
 
     },
@@ -211,7 +224,7 @@ const v = {
 
             const svg = d3.select('svg');
 
-            const data = v.data.raw.map;//.features;
+            const data = v.data.nodes;//.features;
 
             let proj = v.map.proj();
 
@@ -223,8 +236,9 @@ const v = {
               .join("path")
                 .attr('data-nome', d => d.properties.name_muni)
                 .attr('data-uf', d => d.properties.abbrev_state)
-                .attr("stroke", "transparent")
-                .attr('fill', 'khaki')
+                .attr("stroke", "white")
+                .attr('stroke-width',  .5)
+                .attr('fill', 'hotpink')
                 .attr("d", path)
               .append("title")
                 .text(d => d.properties.name_muni)
@@ -287,7 +301,7 @@ const v = {
             //.delay((d,i) => (i % 100) * 100)
             .duration(5000)
             .attrTween('d', function(d, i) {
-              return flubber.toCircle(path(d), proj([d.properties.xc, d.properties.yc])[0], proj([d.properties.xc, d.properties.yc])[1], r(d.properties.pop), {maxSegmentLength: 2});
+              return flubber.toCircle(path(d), d.x, d.y, d.r, {maxSegmentLength: 2});
             })
 
             /*
@@ -515,9 +529,9 @@ const v = {
 
             //console.table(data.filter( (d,i) => i < 30 ));
 
-            v.data.raw.map = data[0].features.slice(0,300);
+            v.data.raw.map = data[0].features.slice(0,1500);
 
-            v.data.raw.map = data[0].features;
+            //v.data.raw.map = data[0].features;
 
 
             //v.data.raw.map = data[1];
@@ -532,8 +546,8 @@ const v = {
             //v.map.calcula_posicoes_mun();
 
 
-            //v.map.render_map();
-            v.map.render_bubbles();
+            v.map.render_map();
+            //v.map.render_bubbles();
             //v.sim.start();
 
             //v.interactions.botoes_modo.monitora();
