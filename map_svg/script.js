@@ -201,8 +201,18 @@ const v = {
               .selectAll("path")
               .data(data)
               .join("path")
-                .attr("stroke", "grey")
-                .attr('fill', 'transparent')
+                .attr('data-id', d => d.properties.name_muni)
+                .attr("stroke", "transparent")
+                .attr('fill', function(d) {
+                    if (d.properties.name_muni == 'Borborema') return 'transparent'
+                    else {
+                        if (d.properties.pop >= 500000) return 'firebrick'
+                        else {
+                            if (d.properties.pop >= 50000) return 'darkgreen';
+                            else return 'khaki'
+                        }
+                    }
+                })
                 .attr("d", path)
               .append("title")
                 .text(d => d.properties.name_muni)
@@ -223,7 +233,7 @@ const v = {
 
             const r = d3.scaleSqrt()
               .domain([0, max_pop])
-              .range([1, 30]) 
+              .range([1, 20]) 
             ;
             
             // render map
@@ -245,13 +255,37 @@ const v = {
 
         change_to_circle : () => {
 
-            svg.selectAll(".countyShape")
+            const svg = d3.select('svg');
+
+            const data = v.data.raw.map.features;
+
+            let proj = v.map.proj();
+
+            const path = d3.geoPath().projection(proj);
+
+            const max_pop = d3.max(data, d => d.properties.pop);
+
+            const r = d3.scaleSqrt()
+              .domain([0, max_pop])
+              .range([1, 20]) 
+            ;
+
+            svg.selectAll("path")
             .transition()
-            .delay(d => d.rank*2)
+            .delay((d,i) => (i % 100) * 100)
             .duration(5000)
             .attrTween('d', function(d, i) {
-              return flubber.toCircle(path(d), d.x, d.y, d.properties.radius, {maxSegmentLength: 2});
+              return flubber.toCircle(path(d), proj([d.properties.xc, d.properties.yc])[0], proj([d.properties.xc, d.properties.yc])[1], r(d.properties.pop), {maxSegmentLength: 2});
             })
+
+            /*
+
+            svg.selectAll("path")
+                .transition()
+                .duration(5000)
+                .attrTween('d', function(d, i) {
+                return flubber.fromCircle(d.x, d.y, d.properties.radius, path(d), {maxSegmentLength: 2});
+            })*/
 
 
         },
@@ -482,8 +516,8 @@ const v = {
             //v.map.calcula_posicoes_mun();
 
 
-            //v.map.render_map();
-            v.map.render_bubbles();
+            v.map.render_map();
+            //v.map.render_bubbles();
 
             //v.interactions.botoes_modo.monitora();
 
