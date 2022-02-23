@@ -316,6 +316,43 @@ const v = {
 
         },
 
+        change_from_circle : () => {
+
+            const svg = d3.select('svg');
+
+            const data = v.data.raw.map;//.features;
+
+            let proj = v.map.proj();
+
+            const path = d3.geoPath().projection(proj);
+
+            const max_pop = d3.max(data, d => d.properties.pop);
+
+            const r = d3.scaleSqrt()
+              .domain([0, max_pop])
+              .range([1, 20]) 
+            ;
+
+            svg.selectAll("path")
+            .transition()
+            //.delay((d,i) => (i % 100) * 100)
+            .duration(5000)
+            .attrTween('d', function(d, i) {
+              return flubber.fromCircle(d.x, d.y, d.r, path(d), {maxSegmentLength: 2});
+            })
+
+            /*
+
+            svg.selectAll("path")
+                .transition()
+                .duration(5000)
+                .attrTween('d', function(d, i) {
+                return flubber.fromCircle(d.x, d.y, d.properties.radius, path(d), {maxSegmentLength: 2});
+            })*/
+
+
+        },
+
         calcula_posicoes_mun : () => {
 
             let data = v.data.raw.mun;
