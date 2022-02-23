@@ -151,10 +151,10 @@ const v = {
 
             v.sim.simulation
               .velocityDecay(0.2)
-              .force('x', d3.forceX().strength(strength).x(d => d.x0))
-              .force('y', d3.forceY().strength(strength).y(d => d.y0))
+              //.force('x', d3.forceX().strength(strength).x(d => d.x0))
+              //.force('y', d3.forceY().strength(strength).y(d => d.y0))
               .force('collision', d3.forceCollide().strength(strength*1.5).radius(d => d.r))
-              .alphaMin(0.02)
+              .alphaMin(0.2)
               .on('tick', () => {
 
                 d3.selectAll('circle')
@@ -516,6 +516,10 @@ const v = {
             //console.table(data.filter( (d,i) => i < 30 ));
 
             v.data.raw.map = data[0].features.slice(0,300);
+
+            v.data.raw.map = data[0].features;
+
+
             //v.data.raw.map = data[1];
             //v.data.nodes = data[0].features.map(d => d.properties);
             //v.data.info.get();
