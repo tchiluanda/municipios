@@ -102,7 +102,8 @@ ggplot(mun_plot) +
     plot.background = element_rect(fill = 'dodgerblue', color = NA),
         panel.background = element_rect(fill = 'transparent', color = NA),
         strip.background = element_rect(fill = 'transparent', color = NA),
-    strip.text.x = element_text(margin = margin(t= 2, r = 0, b = 2, l = 0, unit  = "pt")))
+    strip.text.x = element_text(face = 'bold', color = "white", margin = margin(t= 2, r = 0, b = 2, l = 0, unit  = "pt"))
+  )
 
 ggplot(mun_areas %>% filter(name_muni%in%c("Borborema", "João Pessoa"), abbrev_state=="PB")) + 
   geom_sf(color = "firebrick", fill = 'khaki')
