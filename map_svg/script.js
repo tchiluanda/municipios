@@ -554,16 +554,17 @@ const v = {
 
             atua : (e) => {
 
-                const id = e.target.id
+                const id = e.target.id;
+                console.log(id);
 
                 if (id == "btn-mapa") {
                     v.ctrl.state = 'map';
-                    v.anim.to_map();
+                    v.map.change_from_circle();
                 }
 
                 if (id == "btn-beeswarm") {
                     v.ctrl.state = 'bee';
-                    v.anim.to_beeswarm();
+                    v.map.change_to_circle();
                 }
 
                 //v.sim.set();
@@ -616,6 +617,7 @@ const v = {
         v.sizings.set();
         //v.vis.set_context();
         v.data.read();
+        v.interactions.botoes_modo.monitora();
         // daqui pula para v.ctrl.data_is_loaded
 
     }
