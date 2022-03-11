@@ -120,3 +120,8 @@ Tentar fazer o mapa com bolhas proporcionais, beeswarm.
 Mapa com SVG
 Zoom.
 
+
+### Inspirações
+
+https://medium.com/datavizbr/para-onde-ir-a-escassez-de-leitos-diante-do-avan%C3%A7o-da-pandemia-72613aa1865f
+
