@@ -181,7 +181,10 @@ const v = {
 
               })
               */
-              .on('end', () => {console.log('terminou')})
+              .on('end', () => {
+                  console.log('terminou');
+                  v.beeswarm.scale.set();
+                })
               .stop()
             ;
 
@@ -387,154 +390,60 @@ const v = {
 
             }) 
 
-        },
-
-        render_mun : () => {
-
-            const ctx = v.vis.ctx;
-
-            const { w , h , margin } = v.sizings;
-
-            ctx.clearRect(0, 0, w, h);
-            v.map.render_map();
-
-            const colors = [
-                "#C7A76C", "#99B56B", "#5CBD92", "#3BBCBF", "#7DB0DD"
-            ]
-
-            const points = v.data.nodes;
-
-            points.forEach( (municipio, i) => {
-
-                const { x, y, code_region } = municipio;
-
-                const color_index = +code_region - 1;
-
-                ctx.fillStyle = colors[color_index]//"coral";
-                ctx.lineStyle = 'grey';
-                ctx.globalAlpha = 1;
-
-                ctx.beginPath();
-                ctx.arc(x, y, 2, 0, Math.PI*2, true);
-                ctx.fill();
-                ctx.globalAlpha = .5;
-                //ctx.stroke();
-                ctx.closePath();
-
-            })
-
-
         }
-
 
     },
 
-    vis : {
-        
-        ctx : null,
+    beeswarm : {
 
-        set_context : () => {
+        scale : {
 
-            const cv = document.querySelector(v.refs.canvas);
-            v.vis.ctx= cv.getContext('2d');
+            x : d3.scaleLinear(),
+
+            y : null,
+
+            set : () => {
+
+                const data = v.data.nodes;//v.data.raw.map.features;
+
+                const max_pop = d3.max(data, d => d.properties.pop);
+    
+                v.beeswarm.scale.x.domain([0, max_pop]);
+
+                const svg = d3.select('svg');
+                
+                const h = + svg.style('height').slice(0,-2);
+                const w = + svg.style('width').slice(0,-2);
+
+                v.beeswarm.scale.y = h/2;
+                v.beeswarm.scale.x.range([40, w-40]);
+
+            }
+
         },
 
         render : () => {
 
-            const modo = v.ctrl.state;
-            console.log(modo);
+            const strength = 0.04;
 
-            const ctx = v.vis.ctx;
+            const xs = v.beeswarm.scale.x;
+            const ys = v.beeswarm.scale.y;
 
-            const { w , h , margin } = v.sizings;
+            v.sim.simulation
+              .force('x', d3.forceX().strength(strength).x(d => xs(d.properties.pop) ))
+              .force('y', d3.forceY().strength(strength).y(ys/2))
+              .on('tick', () => {
 
-            ctx.clearRect(0, 0, w, h);
+                d3.selectAll('path')
+                  .attr('transform', d => `translate(${d.x,d.y})`);
 
-            if (modo == 'map') v.map.render_map();
-
-            const colors = [
-                "#C7A76C", "#99B56B", "#5CBD92", "#3BBCBF", "#7DB0DD"
-            ]
-
-            const points = v.data.nodes;
-
-            points.forEach( (municipio, i) => {
-
-                const { x, y, code_region } = municipio;
-
-                const color_index = +code_region - 1;
-
-                ctx.fillStyle = colors[color_index]//"coral";
-                ctx.lineStyle = 'grey';
-                ctx.globalAlpha = 1;
-
-                ctx.beginPath();
-                ctx.arc(x, y, 2, 0, Math.PI*2, true);
-                ctx.fill();
-                ctx.globalAlpha = .5;
-                //ctx.stroke();
-                ctx.closePath();
-
-            })
-
-            if (modo == 'bee') {
-
-                ctx.globalAlpha = 1;
-
-                ctx.beginPath();       // Start a new path
-                ctx.moveTo(v.scales.x(5000), margin);    // Move the pen to (30, 50)
-                ctx.lineTo(v.scales.x(5000), h - margin);  // Draw a line to (150, 100)
-                ctx.stroke(); 
-    
-                ctx.beginPath();       // Start a new path
-                ctx.moveTo(v.scales.x(50000), margin);    // Move the pen to (30, 50)
-                ctx.lineTo(v.scales.x(50000), h - margin);  // Draw a line to (150, 100)
-                ctx.stroke(); 
-    
-                ctx.beginPath();       // Start a new path
-                ctx.moveTo(v.scales.x(500000), margin);    // Move the pen to (30, 50)
-                ctx.lineTo(v.scales.x(500000), h - margin);  // Draw a line to (150, 100)
-                ctx.stroke(); 
-    
-                ctx.beginPath();       // Start a new path
-                ctx.moveTo(v.scales.x(5000000), margin);    // Move the pen to (30, 50)
-                ctx.lineTo(v.scales.x(5000000), h - margin);  // Draw a line to (150, 100)
-                ctx.stroke(); 
-
-            }
-
+              })
+              .alpha(1).restart()
+            ;
 
 
         }
 
-
-    },
-
-    anim : {
-
-        get_future_value : (i, target, param ) => target[param],
-
-        to_map : () => gsap.to(
-            v.data.nodes,
-            {
-                x : (i, target) => v.anim.get_future_value(i, target, 'x0'),
-                y : (i, target) => v.anim.get_future_value(i, target, 'y0'),
-                onUpdate : v.vis.render
-
-            }
-
-        ),
-
-        to_beeswarm : () => gsap.to(
-            v.data.nodes,
-            {
-                x : (i, target) => v.anim.get_future_value(i, target, 'xf'),
-                y : (i, target) => v.anim.get_future_value(i, target, 'yf'),
-                onUpdate : v.vis.render
-
-            }
-
-        )
 
     },
 
@@ -562,8 +471,8 @@ const v = {
                     v.map.change_from_circle();
                 }
 
-                if (id == "btn-beeswarm") {
-                    v.ctrl.state = 'bee';
+                if (id == "btn-bubble") {
+                    v.ctrl.state = 'bubble';
                     v.map.change_to_circle();
                 }
 
