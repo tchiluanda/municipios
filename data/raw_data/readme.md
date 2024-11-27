@@ -23,20 +23,28 @@ Período: 2023
 ## Dados do Siconfi
 
 ### Arquivos do finbra - Contas Anuais:
-* "finbra_MUN_DespesasOrcamentarias(AnexoI-D).zip", "finbra_MUN_DespesasporFuncao(AnexoI-E).zip", "finbra_MUN_ReceitasOrcamentarias(AnexoI-C).zip"
+* "dca-mun-2023-desp.csv", "dca-mun-2023-desp-fun.csv", "dca-mun-2023-rec.csv", "dca-mun-2023-bp.csv", 
+
 https://siconfi.tesouro.gov.br/siconfi/pages/public/consulta_finbra/finbra_list.jsf
-Exercício: 2018, Escopo: Municípios, 
-Tabelas: Despesas Orçamentárias (Anexo I-D), Despesas por Função (Anexo I-E), Receitas Orçamentárias (Anexo I-C).
+Exercício: 2023, Escopo: Municípios, 
+Tabelas: Despesas Orçamentárias (Anexo I-D), Despesas por Função (Anexo I-E), Receitas Orçamentárias (Anexo I-C), Balanço Patrimonial DCA (Anexo I-AB)
 
 ### Arquivos do finbra - RGF:
-* "finbraRGF_MUN_Dividaconsolidadaliquida-SaldodoExercicioAnterior (quadrimestrais).zip"
-https://siconfi.tesouro.gov.br/siconfi/pages/public/consulta_finbra/finbra_list.jsf
-Exercício: 2018, Periodicidade: Quadrimestral, Período: 3º Quadrimestre, Escopo: Municípios, Poder: Todos, Anexo: Anexo 02 - Demonstrativo da Dívida Consolidada Líquida, Tabela: Dívida Consolidada Líquida.
+* "dcl-mun-2023-quad.csv"
+https://siconfi.tesouro.gov.br/siconfi/index.jsf
+Exercício: 2023, Periodicidade: Quadrimestral, Período: 3º Quadrimestre, Escopo: Municípios, Poder: Todos, Anexo: Anexo 02 - Demonstrativo da Dívida Consolidada Líquida, Tabela: Dívida Consolidada Líquida.
 
-* "finbraRGF_MUN_Dividaconsolidadaliquida-SaldodoExercicioAnterior (semestrais).zip"
-https://siconfi.tesouro.gov.br/siconfi/pages/public/consulta_finbra/finbra_list.jsf
-Exercício: 2018, Periodicidade: Semestral, Período: 2º Semestre, Escopo: Municípios, Poder: Todos, Anexo: Anexo 02 - Demonstrativo da Dívida Consolidada Líquida, Tabela: Dívida Consolidada Líquida.
+* "dtp-mun-2023-quad.csv""
+https://siconfi.tesouro.gov.br/siconfi/index.jsf
+Exercício: 2023, Periodicidade: Quadrimestral, Período: 3º Quadrimestre, Escopo: Municípios, Poder: Todos, Anexo: Anexo 01 - Demonstrativo das Despesas com Pessoal, Tabela: DTP e Apuração do Cumprimento do Limite Legal
 
+* "dcl-mun-2023-sem.csv"
+https://siconfi.tesouro.gov.br/siconfi/index.jsf
+Exercício: 2023, Periodicidade: Semestral, Período: 2º Semestre, Escopo: Municípios, Poder: Todos, Anexo: Anexo 02 - Demonstrativo da Dívida Consolidada Líquida, Tabela: Dívida Consolidada Líquida.
+
+* "dtp-mun-2023-sem.csv""
+https://siconfi.tesouro.gov.br/siconfi/index.jsf
+Exercício: 2023, Periodicidade: Semestral, Período: 2º Semestre, Escopo: Municípios, Poder: Todos, Anexo: Anexo 01 - Demonstrativo das Despesas com Pessoal, Tabela: DTP e Apuração do Cumprimento do Limite Legal
 
 
 
