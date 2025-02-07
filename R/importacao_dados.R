@@ -88,8 +88,7 @@ raw_mun_arrec_fed <- read_excel("./data/raw_data/arrecadacao-da-receita-administ
 
 # Siconfi -----------------------------------------------------------------
 
-
-
+desp_pessoal <- read.csv2("./data/raw_data/dtp-mun-2023-sem.csv", skip = 5, fileEncoding = "Latin1")2.
 
 # Explorações -----------------------------------------------------------
 

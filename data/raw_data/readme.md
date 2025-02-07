@@ -2,41 +2,49 @@
 
 ## Dados do IBGE
 
-* "AR_BR_RG_UF_MES_MIC_MUN_2018.xls"
+* Áreas: "areas-mun-2022.xls"
 https://www.ibge.gov.br/geociencias/downloads-geociencias.html
-estrutura_regional, areas_territoriais, 2018
+organizacao do territorio, estrutura territorial, areas_territoriais, 2022
 
-* "base_de_dados_2010_2016_xls.zip"
+* "pib-mun-2021.xlsx"
 https://www.ibge.gov.br/estatisticas/downloads-estatisticas.html
-Pib_Municipios, 2016, base
+Pib_Municipios, 2021, base
 
-* "IBGE_perfil_mun_2017_xls.zip"
+* "perfil-mun-2021.xlsx"
 https://www.ibge.gov.br/estatisticas/downloads-estatisticas.html
-Perfil_Municipios, 2017, Base_de_Dados
+Perfil_Municipios, 2021, Base_de_Dados
 
 ## Dados da Receita Federal
 
-* "arrecadacao-da-receita-administrada-pela-rfb-por-municipio-2018.xlsx"
-https://receita.economia.gov.br/dados/receitadata/arrecadacao/copy_of_arrecadacao-das-receitas-administradas-pela-rfb-por-municipio/arrecadacao-por-municipios
-Receitas Administradas pela RFB, Período: 2018
+* "arrecadacao-da-receita-administrada-pela-rfb-por-municipio-2023.xlsx"
+https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/dados-abertos/receitadata/arrecadacao/copy_of_arrecadacao-das-receitas-administradas-pela-rfb-por-municipio
+Período: 2023
 
 ## Dados do Siconfi
 
 ### Arquivos do finbra - Contas Anuais:
-* "finbra_MUN_DespesasOrcamentarias(AnexoI-D).zip", "finbra_MUN_DespesasporFuncao(AnexoI-E).zip", "finbra_MUN_ReceitasOrcamentarias(AnexoI-C).zip"
+* "dca-mun-2023-desp.csv", "dca-mun-2023-desp-fun.csv", "dca-mun-2023-rec.csv", "dca-mun-2023-bp.csv", 
+
 https://siconfi.tesouro.gov.br/siconfi/pages/public/consulta_finbra/finbra_list.jsf
-Exercício: 2018, Escopo: Municípios, 
-Tabelas: Despesas Orçamentárias (Anexo I-D), Despesas por Função (Anexo I-E), Receitas Orçamentárias (Anexo I-C).
+Exercício: 2023, Escopo: Municípios, 
+Tabelas: Despesas Orçamentárias (Anexo I-D), Despesas por Função (Anexo I-E), Receitas Orçamentárias (Anexo I-C), Balanço Patrimonial DCA (Anexo I-AB)
 
 ### Arquivos do finbra - RGF:
-* "finbraRGF_MUN_Dividaconsolidadaliquida-SaldodoExercicioAnterior (quadrimestrais).zip"
-https://siconfi.tesouro.gov.br/siconfi/pages/public/consulta_finbra/finbra_list.jsf
-Exercício: 2018, Periodicidade: Quadrimestral, Período: 3º Quadrimestre, Escopo: Municípios, Poder: Todos, Anexo: Anexo 02 - Demonstrativo da Dívida Consolidada Líquida, Tabela: Dívida Consolidada Líquida.
+* "dcl-mun-2023-quad.csv"
+https://siconfi.tesouro.gov.br/siconfi/index.jsf
+Exercício: 2023, Periodicidade: Quadrimestral, Período: 3º Quadrimestre, Escopo: Municípios, Poder: Todos, Anexo: Anexo 02 - Demonstrativo da Dívida Consolidada Líquida, Tabela: Dívida Consolidada Líquida.
 
-* "finbraRGF_MUN_Dividaconsolidadaliquida-SaldodoExercicioAnterior (semestrais).zip"
-https://siconfi.tesouro.gov.br/siconfi/pages/public/consulta_finbra/finbra_list.jsf
-Exercício: 2018, Periodicidade: Semestral, Período: 2º Semestre, Escopo: Municípios, Poder: Todos, Anexo: Anexo 02 - Demonstrativo da Dívida Consolidada Líquida, Tabela: Dívida Consolidada Líquida.
+* "dtp-mun-2023-quad.csv""
+https://siconfi.tesouro.gov.br/siconfi/index.jsf
+Exercício: 2023, Periodicidade: Quadrimestral, Período: 3º Quadrimestre, Escopo: Municípios, Poder: Todos, Anexo: Anexo 01 - Demonstrativo das Despesas com Pessoal, Tabela: DTP e Apuração do Cumprimento do Limite Legal
 
+* "dcl-mun-2023-sem.csv"
+https://siconfi.tesouro.gov.br/siconfi/index.jsf
+Exercício: 2023, Periodicidade: Semestral, Período: 2º Semestre, Escopo: Municípios, Poder: Todos, Anexo: Anexo 02 - Demonstrativo da Dívida Consolidada Líquida, Tabela: Dívida Consolidada Líquida.
+
+* "dtp-mun-2023-sem.csv""
+https://siconfi.tesouro.gov.br/siconfi/index.jsf
+Exercício: 2023, Periodicidade: Semestral, Período: 2º Semestre, Escopo: Municípios, Poder: Todos, Anexo: Anexo 01 - Demonstrativo das Despesas com Pessoal, Tabela: DTP e Apuração do Cumprimento do Limite Legal
 
 
 
