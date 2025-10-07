@@ -4,20 +4,24 @@ library(ggbeeswarm)
 
 # Perfil dos municípios ---------------------------------------------------
 
-arq_zip <- "./data/raw_data/IBGE_perfil_mun_2017_xls.zip"
-arq <- unzip(list = TRUE, zipfile = arq_zip)["Name"][1,]
-unzip(arq_zip)
+# arq_zip <- "./data/raw_data/IBGE_perfil_mun_2017_xls.zip"
+# arq <- unzip(list = TRUE, zipfile = arq_zip)["Name"][1,]
+# unzip(arq_zip)
+
+arq <- "./data/raw_data/perfil-mun-2021.xlsx"
 
 raw_mun_perfil <- read_excel(arq, sheet = "Variáveis externas")
 
-file.remove(arq)
+#file.remove(arq)
 
 
 # PIB dos Municípios ------------------------------------------------------
 
-arq_zip <- "./data/raw_data/base_de_dados_2010_2016_xls.zip"
-arq <- unzip(list = TRUE, zipfile = arq_zip)["Name"][1,]
-unzip(arq_zip)
+# arq_zip <- "./data/raw_data/base_de_dados_2010_2016_xls.zip"
+# arq <- unzip(list = TRUE, zipfile = arq_zip)["Name"][1,]
+# unzip(arq_zip)
+
+arq <- "./data/raw_data/pib-mun-2021.xlsx"
 
 raw_mun_pib    <- read_excel(arq,
                              col_types = c("numeric",
@@ -37,53 +41,54 @@ raw_mun_pib    <- read_excel(arq,
                                            "NM_MesoRegiao",
                                            "CD_MicroRegiao",
                                            "NM_MicroRegiao",
-                                           "CD_RegRural",
-                                           "NM_RegRural",
-                                           "TP_RegRural",
                                            "CD_RegGeoImed",
                                            "NM_RegGeoImed",
                                            "Mun_RegGeoImed",
                                            "CD_RegGeoIntermed",
                                            "NM_RegGeoIntermed",
                                            "Mun_RegGeoIntermed",
-                                           "AmazoniaLeal",
-                                           "Semiarido",
                                            "CD_ConUrb",
                                            "NM_ConUrb",
                                            "TP_ConUrb",
                                            "CD_ArranjoPop",
                                            "NM_ArranjoPop",
-                                           "TipologiaRuralUrbana",
                                            "HierarqUrbana",
-                                           "HierarqUrbana_PrincCat",
+                                           "HierarqUrbana_PrincCat",   
+                                           "CD_RegRural",
+                                           "NM_RegRural",
+                                           "TP_RegRural",
+                                           "AmazoniaLeal",
+                                           "Semiarido",
+                                           #"TipologiaRuralUrbana",
                                            "Cid-Reg_SP",
                                            "PIB_Agropec",
                                            "PIB_Industria",
                                            "PIB_Servicos",
-                                           "PIB_Adm",
+                                           "PIB_Adm_exceto",
+                                           "PIB_Adm_def_educ_sau_seg",
                                            "Vlr_Bruto_Tot",
                                            "Impostos",
                                            "PIB",
-                                           "Pop",
+                                           #"Pop",
                                            "PIBpc",
                                            "Atividade1",
                                            "Atividade2",
                                            "Atividade3")
 ) %>%
-  filter(Ano == "2016")
+  filter(Ano == "2021")
 
-file.remove(arq)
+#file.remove(arq)
 
 
 # Áreas dos Municípios ----------------------------------------------------
 
 
-raw_mun_areas  <- read_excel("./data/raw_data/AR_BR_RG_UF_MES_MIC_MUN_2018.xls", sheet = "AR_BR_MUN_2018")
+raw_mun_areas  <- read_excel("./data/raw_data/areas-mun-2022.xlsx", sheet = "AR_BR_MUN_2022")
 
 
 # Arrecadação Federal -----------------------------------------------------
 
-raw_mun_arrec_fed <- read_excel("./data/raw_data/arrecadacao-da-receita-administrada-pela-rfb-por-municipio-2018.xlsx", sheet = "TOTAL", skip = 5)
+raw_mun_arrec_fed <- read_excel("./data/raw_data/arrecadacao-da-receita-administrada-pela-rfb-por-municipio-2023.xlsx", sheet = "TOTAL", skip = 5)
 
 
 # Siconfi -----------------------------------------------------------------
@@ -92,7 +97,7 @@ desp_pessoal <- read.csv2("./data/raw_data/dtp-mun-2023-sem.csv", skip = 5, file
 
 # Explorações -----------------------------------------------------------
 
-ggplot(raw_mun_perfil) + geom_beeswarm(aes(x = `POP EST`, y = 0), groupOnX = FALSE)
+ggplot(raw_mun_perfil) + geom_beeswarm(aes(x = `Pop estimada 2021`, y = 0), groupOnX = FALSE)
 
 
 

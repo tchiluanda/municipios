@@ -4,39 +4,128 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dados Brasil</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <div class="wrapper-abertura">
 
-        <div class="container-titulo"><h1>Título</h1></div>
+        <img src="logo.png" alt="" class="logo">
 
-        <div class="container-chat-ia">Chat</div>
+        <img src="bg_curitiba_bosque_portugal.jpg" alt="" class="bg">
+
+        <div class="container-titulo"><h1>Portal de Informações de Estados e Municípios</h1></div>
 
         <div class="placeholder-mapa">
+            <h2>Explore usando o mapa</h2>
             <svg class="mapa"></svg>
         </div>
 
-        <div class="container-menu-abertura">
-            <h2>Conteúdo</h2>
-            <ul class="menu-abertura"></ul>
-        </div>
-
-        <div class="container-busca">
-            <input type="search" name="busca-inicial" id="busca-inicial" placeholder="Procure por um município">
+        <div class="container-chat-ia">
+            <h2>Ou... converse com os dados</h2>
+            <div class="chat">
+                <p>Faça uma pergunta...</p>
+                <img class="robot" src="robot.png" alt="" srcset="">
+            </div>
         </div>
 
     </div>
 
-    <div class="grid-mapa">
+    <div class="wrapper-visao-estados">
 
-        <div class="placeholder-titulo"></div>
-        <div class="placeholder-chat-ia"></div>
-        <div class="container-mapa"></div>
-        <div class="placeholder-menu-abertura"></div>
-        <div class="placeholder-busca"></div>
+        <div class="header-visao-estados">
+            <img src="logo-colorido.png" alt="" class="logo-estados">
+            <h1>Portal de Informações de Estados e Municípios</h1>
+            <h3 data-text-field="nome estado">Estado do <select name="" id=""><option value="">Paraná</option></select> <img class="bandeira-estado" src="bandeira-parana.png" alt=""></h3>
+            <div class="container-dados-principais">
+        </div>
 
+        <div class="main-visao-estados">
+
+            <div class="wrapper-grandes-numeros">
+                <div class="topicos-visao-estados">
+
+                    <div class="grandes-numeros" data-gn-tipo="pop">
+                        <p class="gn-titulo">população</p>
+                        <p class="gn-valor">11,4 milhões</p>
+                    </div>
+
+                    <div class="grandes-numeros" data-gn-tipo="qde_mun">
+                        <p class="gn-titulo">quantidade de municípios</p>
+                        <p class="gn-valor">399</p>
+                    </div>
+
+                    <div class="grandes-numeros" data-gn-tipo="qde_mun">
+                        <p class="gn-titulo">municípios no siconfi</p>
+                        <p class="gn-valor">98%</p>
+                    </div>
+
+                    <div class="grandes-numeros" data-gn-tipo="qde_mun">
+                        <p class="gn-titulo">pib estadual</p>
+                        <p class="gn-valor">R$ 756 bilhões</p>
+                    </div>
+
+                    <div class="grandes-numeros" data-gn-tipo="qde_mun">
+                        <p class="gn-titulo">Despesas do Estado</p>
+                        <p class="gn-valor">R$ 67,6 bilhões</p>
+                    </div>
+
+                    <div class="grandes-numeros" data-gn-tipo="qde_mun">
+                        <p class="gn-titulo">Despesas dos Municípios</p>
+                        <p class="gn-valor">R$ 65 bilhões</p>
+                    </div>
+
+                </div>
+            </div>
+            <h3 class="divisor">Despesas por área de atuação do governo</h3>
+            <div class="graficos-visao-estados">
+                <div class="container-graficos">
+                    <h4>Despesas dos Municípios do Estado</h4>
+                    <img src="funcao-pr.png" alt="">
+                </div>
+                <div class="container-mapa-estado">
+                    <h4>Despesas com <select name="" id="">
+                        <option value="">SAÚDE</option>
+                    </select> em relação ao total de despesas do município</h4>
+                    <img src="choropleth.png" alt="">
+                </div>
+            </div>
+
+            <h3 class="divisor">Perfil dos municípios</h3>
+
+
+            <div class="graficos-visao-estados">
+                <div class="container-graficos">
+                     <p class="intro">A análise do perfil dos municípios paranaenses possibilita uma visão ampla e integrada das diferentes dimensões que compõem a realidade local. Ao reunir informações sobre aspectos demográficos, socioeconômicos e territoriais, este painel busca oferecer um panorama que auxilia na compreensão das particularidades regionais e nas tendências de desenvolvimento.
+                    </p>
+
+                    <p class="intro">
+                        Mais do que números isolados, os gráficos aqui apresentados permitem observar padrões, contrastes e oportunidades que emergem a partir da comparação entre diferentes municípios. Essa abordagem contribui para fortalecer a tomada de decisão, estimular debates qualificados e orientar estratégias que visem à melhoria da qualidade de vida da população.
+                    </p>
+
+                                            <img src="saude-educacao.png" alt="">
+
+                </div>
+                <div class="container-mapa-estado">
+                        <h4>Distribuição da População</h4>
+                        <img src="choropleth-pop.png" alt="">
+                </div>
+            </div>
+
+            <div class="graficos-visao-estados">
+                <div class="container-mapa-estado">
+                        <h4>Distribuição da População</h4>
+                        <img src="choropleth-pop.png" alt="">
+                </div>
+                <div class="container-graficos">
+                        <h4>Despesas com Saúde x Educação</h4>
+                        <img src="saude-educacao.png" alt="">
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
@@ -45,4 +134,4 @@
 
     
 </body>
-</html>l
+</html>

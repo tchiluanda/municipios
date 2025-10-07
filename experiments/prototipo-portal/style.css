@@ -5,15 +5,48 @@
 body {
     margin: 0;
     padding: 0;
+    background-color: #333;
+    font-family: 'Inter';
 }
 
 .wrapper-abertura,
-.grid-mapa {
+.wrapper-visao-estados {
     width: 100%;
     height: 100vh;
+}
+
+.wrapper-abertura {
     display: grid;
-    grid-template-rows: 80px 1fr 80px;
-    grid-template-columns: 1fr 600px 1fr;
+    grid-template-rows: 80px 1fr;
+    grid-template-columns: 1fr 1fr;
+}
+
+.wrapper-abertura {
+    position: relative;
+    color: whitesmoke;
+    /*background: linear-gradient(to right, beige, cornsilk);*/
+    background-color: #333;
+
+}
+
+.logo {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+}
+
+.wrapper-abertura .bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    /*filter: blur(1px);*/
+    object-fit: cover;
+    display: none;
 }
 
 .grid-mapa {
@@ -23,40 +56,49 @@ body {
     z-index: -1;
 }
 
-.wrapper-abertura > div,
-.grid-mapa > div {
-    border: 1px solid tomato;
+.wrapper-abertura > div {
+    /*border: 1px solid tomato;*/
+    padding: .5rem;
 }
 
-.container-titulo,
-.placeholder-titulo { 
+.wrapper-abertura > div > h2 {
+    text-align: center;
+}
+
+img.robot {
+    display: block;
+    width: 100px;
+    margin: 2rem auto;
+}
+
+.container-titulo { 
     grid-row: 1 / 2;
-    grid-column: 2 / 3;
+    grid-column: 1 / 3;
 }
 
-.placeholder-mapa,
-.container-mapa {
+.placeholder-mapa {
     grid-row: 2 / 3;
-    grid-column: 2 / 3;
+    grid-column: 1 / 2;
     max-width: 100%;
 }
 
-.container-menu-abertura,
-.placeholder-menu-abertura {
+.container-chat-ia {
     grid-row: 2 / 3;
-    grid-column: 1 / 2;
-}
-
-.container-chat-ia,
-.placeholder-chat-ia {
-    grid-row: 2 / 3;
-    grid-column: 3 / 4;
-}
-
-.container-busca,
-.placeholder-busca {
-    grid-row: 3 / 4;
     grid-column: 2 / 3;
+}
+
+
+
+/* TITULO */
+
+h2 {
+    font-weight: normal;
+    font-size: 1.3rem;
+    margin-top: 50px;
+}
+
+.container-titulo {
+    text-align: center;
 }
 
 /* MAPA */
@@ -64,16 +106,150 @@ body {
 svg.mapa {
     width: 600px;
     height: 600px;
-    border: 2px solid cadetblue;
+    /*border: 2px solid cadetblue;*/
 }
 
 path.estados {
     fill: transparent;
-    stroke: #333;
+    stroke: whitesmoke;
     transition: transform .2s;
 }
 
 path.estados:hover {
     fill: gold;
     stroke-width: 3;
+}
+
+div.chat {
+    background-color: white;
+    border-radius: 1.5rem;
+    border: 1px solid gray;
+    color: gray;
+    min-height: 300px;
+    padding: 1rem;
+    max-width: 400px;
+    margin: 0 auto;
+    margin-top: 100px;
+}
+
+/* Visao Estados */
+
+.wrapper-visao-estados {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    height: auto;
+}
+
+img.logo-estados {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    width: 150px;
+}
+
+.header-visao-estados {
+    text-align: center;
+    position: relative;
+}
+
+.bandeira-estado {
+    height: 1em;
+    margin-left: 1em;
+}
+
+.header-visao-estados h1 {
+    font-size: 1rem;
+    color: #444;
+    font-weight: normal;
+}
+
+.header-visao-estados h3 {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+    font-size: 2rem;
+}
+
+.topicos-visao-estados {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    gap: 2rem;
+    margin: 2rem auto;
+    max-width: 800px;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 2rem;
+}
+
+.wrapper-grandes-numeros {
+    background-color: #333;
+    color: whitesmoke;
+}
+
+.grandes-numeros {
+    flex-basis: 200px;
+}
+
+.grandes-numeros p {
+    margin: 0;
+    text-align: left;
+}
+
+.grandes-numeros .gn-titulo {
+    font-size: .6rem;
+    text-transform: uppercase;
+    letter-spacing: .2;
+    color: #CCC;
+}
+
+.grandes-numeros .gn-valor {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.graficos-visao-estados {
+    display: flex;
+    flex-direction: row;
+    background-color: white;
+}
+
+.graficos-visao-estados > div {
+    width: 45%;
+}
+
+.graficos-visao-estados img {
+    width: 100%;
+}
+
+select {
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    margin-left: .2em;
+    border-radius: 4px;
+}
+
+h4 {
+    text-align: left;
+    margin-left: 1rem;
+}
+
+h3.divisor {
+    font-size: 1.4rem;
+    text-transform: uppercase;
+    font-weight: normal;
+    color: #666;
+    text-align: left;
+    justify-self: flex-start;
+    margin: .5rem 1rem;
+}
+
+p.intro {
+    text-align: left;
+    margin-left: 1rem;
 }
