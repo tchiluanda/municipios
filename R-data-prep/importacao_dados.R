@@ -93,7 +93,105 @@ raw_mun_arrec_fed <- read_excel("./data/raw_data/arrecadacao-da-receita-administ
 
 # Siconfi -----------------------------------------------------------------
 
-desp_pessoal <- read.csv2("./data/raw_data/dtp-mun-2023-sem.csv", skip = 5, fileEncoding = "Latin1")2.
+desp_pessoal <- read.csv2("./data/raw_data/dtp-mun-2023-sem.csv", skip = 5, fileEncoding = "Latin1")
+
+arq_zip <- "./data/raw_data/dca-mun-2023-desp-funcao.csv.zip"
+arq_name <- unzip(list = TRUE, zipfile = arq_zip)["Name"][1,]
+
+#df <- read.csv2(unz(arq_zip, arq_name), skip = 3, fileEncoding = "ISO-8859-2", col.names = c("nome_mun", "cod_mun", "sigla_uf", "pop", "coluna", "conta", "cod_conta", "valor"))
+desp_fun <- readr::read_csv2(unz(arq_zip, arq_name), col_names = c("nome_mun", "cod_mun", "sigla_uf", "pop", "coluna", "conta", "cod_conta", "valor"), skip = 4, locale = locale(encoding = "Latin1"))
+
+desp_fun_PR <- desp_fun %>% filter(sigla_uf == "PR", coluna == "Despesas Empenhadas", substr(conta, 4, 4) == "-") %>%
+  group_by(nome_mun) %>%
+  mutate(total_desp = sum(valor)) %>%
+  ungroup() %>%
+  pivot_wider(names_from = conta, values_from = valor, values_fill = 0)
+
+total_mun_pr <- desp_fun_PR %>%
+  summarise(
+    across(
+      .cols = all_of(names(.)[substr(names(.), 4, 4) == "-"]),
+      .fns  = sum
+    )
+  ) %>%
+  gather()
+  
+library(extrafont)
+library(colorspace)
+loadfonts()
+
+ggplot(total_mun_pr, aes(x = value, y = reorder(key, value))) + geom_col(fill = "firebrick") +
+  labs(x = NULL, y = NULL) +
+  scale_x_continuous(
+    labels = scales::label_number(scale = 1e-9, suffix = " bi")
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    text = element_text(family = "Inter")
+  )
+
+ggplot(dados_pr, aes()) + geom_histogram(fill = "tomato") +
+  labs(x = NULL, y = NULL) +
+  scale_x_continuous(
+    labels = scales::label_number(scale = 1e-9, suffix = " bi")
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    text = element_text(family = "Inter")
+  )
+
+ggsave("funcao-pr.png", width = 6, height = 4)
+
+mun_br <- geobr::read_municipality()
+mun_pr <- mun_br %>% filter(abbrev_state == "PR")
+
+dados_pr <- mun_pr %>% left_join(desp_fun_PR, by = c("code_muni" = "cod_mun"))
+
+ggplot(dados_pr) + geom_sf(aes(fill = `10 - Saúde` / total_desp), color = NA) + 
+  #scale_fill_continuous_sequential(pal = "Lajolla") +
+  scale_fill_binned_sequential(pal = "Green-Yellow",
+                               labels = scales::label_percent(accuracy = 1))+
+  labs(fill = NULL) +
+  theme_void() +
+  theme(
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    text = element_text(family = "Inter")
+  )
+
+ggplot(dados_pr %>% mutate(cat_pop = cut(pop, c(0, 10000, 50000, 100000, 200000, 500000, 1e6, Inf), c("até 10 mil", "10 a 50 mil", "50 a 100 mil", "100 a 200 mil", "200 a 500 mil", "500 mil a 1 milhão", "Acima de 1 milhão")))) + geom_sf(aes(fill = cat_pop), color = NA) + 
+  #scale_fill_continuous_sequential(pal = "Lajolla") +
+  scale_fill_manual(values = rev(c("#704D9E", "#A653A8", "#CF63A6", "#ED7C97", "#F7A086", "#F9C483", 
+                               "#F3E79A"))) +
+  labs(fill = NULL) +
+  theme_void() +
+  theme(
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    text = element_text(family = "Inter")
+  )
+
+ggplot(dados_pr, aes(x = `10 - Saúde` / pop, y = `12 - Educação` / pop, size = pop, color = `10 - Saúde` > `12 - Educação`)) + 
+  annotate(geom = "segment", x = 0, y = 0, xend = 6000, yend = 6000, color = "#333333") +
+  geom_point() +
+  labs(x = "Despesa per capita com Saúde", y = "Despesa per capita com Educação") +
+  scale_color_discrete_qualitative() +
+  guides(size = "none") +
+  theme_minimal() +
+  theme(
+    text = element_text(family = "Inter"),
+    legend.position = "none"
+  )
+
+dados_pr_geo <- geojsonsf::sf_geojson(dados_pr, digits = 6)
+write(dados_pr_geo, "dados-pr.json")
+
+ggplot()
+
 
 # Explorações -----------------------------------------------------------
 
