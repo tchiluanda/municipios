@@ -95,11 +95,35 @@ raw_mun_arrec_fed <- read_excel("./data/raw_data/arrecadacao-da-receita-administ
 
 desp_pessoal <- read.csv2("./data/raw_data/dtp-mun-2023-sem.csv", skip = 5, fileEncoding = "Latin1")
 
+## Desp Função
 arq_zip <- "./data/raw_data/dca-mun-2023-desp-funcao.csv.zip"
 arq_name <- unzip(list = TRUE, zipfile = arq_zip)["Name"][1,]
+desp_fun <- readr::read_csv2(
+  unz(arq_zip, arq_name), 
+  col_names = c("nome_mun", "cod_mun", "sigla_uf", "pop", "coluna", "conta", "cod_conta", "valor"), 
+  skip = 4, 
+  locale = locale(encoding = "WINDOWS-1252"))
 
-#df <- read.csv2(unz(arq_zip, arq_name), skip = 3, fileEncoding = "ISO-8859-2", col.names = c("nome_mun", "cod_mun", "sigla_uf", "pop", "coluna", "conta", "cod_conta", "valor"))
-desp_fun <- readr::read_csv2(unz(arq_zip, arq_name), col_names = c("nome_mun", "cod_mun", "sigla_uf", "pop", "coluna", "conta", "cod_conta", "valor"), skip = 4, locale = locale(encoding = "Latin1"))
+## Desp Economica
+arq_zip <- "./data/raw_data/dca-mun-2023-desp.csv.zip"
+arq_name <- unzip(list = TRUE, zipfile = arq_zip)["Name"][1,]
+desp_dca <- readr::read_csv2(
+  unz(arq_zip, arq_name),
+  col_names = c("nome_mun", "cod_mun", "sigla_uf", "pop", "coluna", "conta", "cod_conta", "valor"), 
+  skip = 4,
+  locale = locale(encoding = "WINDOWS-1252"))
+
+## Receitas
+arq_zip <- "./data/raw_data/dca-mun-2023-rec.csv.zip"
+arq_name <- unzip(list = TRUE, zipfile = arq_zip)["Name"][1,]
+rec <- readr::read_csv2(
+  unz(arq_zip, arq_name),
+  col_names = c("nome_mun", "cod_mun", "sigla_uf", "pop", "coluna", "conta", "cod_conta", "valor"), 
+  skip = 4,
+  locale = locale(encoding = "WINDOWS-1252"))
+
+
+
 
 desp_fun_PR <- desp_fun %>% filter(sigla_uf == "PR", coluna == "Despesas Empenhadas", substr(conta, 4, 4) == "-") %>%
   group_by(nome_mun) %>%
