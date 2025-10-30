@@ -113,6 +113,12 @@ desp_dca <- readr::read_csv2(
   skip = 4,
   locale = locale(encoding = "WINDOWS-1252"))
 
+## Naturezas Rec
+lista_nrs <- read_excel("data/raw_data/2023_Anexo_II_Portaria_STN_642_Leiaute_MSC_19Fev24.xlsx",
+                                                                  sheet = "NR", skip = 1)
+tab_nrs <- lista_nrs %>% select(NR, Valorizável) %>% mutate(NR = as.character(NR))
+
+
 ## Receitas
 arq_zip <- "./data/raw_data/dca-mun-2023-rec.csv.zip"
 arq_name <- unzip(list = TRUE, zipfile = arq_zip)["Name"][1,]
@@ -120,10 +126,43 @@ rec <- readr::read_csv2(
   unz(arq_zip, arq_name),
   col_names = c("nome_mun", "cod_mun", "sigla_uf", "pop", "coluna", "conta", "cod_conta", "valor"), 
   skip = 4,
-  locale = locale(encoding = "WINDOWS-1252"))
+  locale = locale(encoding = "WINDOWS-1252")) %>%
+  mutate(NR = str_extract(conta, "^[0-9\\.]+") |> str_replace_all("\\.", "")) %>%
+  left_join(tab_nrs)
 
 
+naturezas_rec <- rec %>% select(conta) %>% distinct() %>% arrange()
+colunas <- rec %>% select(coluna) %>% distinct() %>% arrange()
+origens_rec <- naturezas_rec %>% filter(str_detect(conta, "0\\.0\\.00\\.0\\.0"))
 
+ggplot(rec %>% 
+         filter(
+           coluna == "Receitas Brutas Realizadas",
+           Valorizável == "SIM"
+           )
+       ) + 
+  geom_col(aes(x = valor, y = conta))
+
+
+naturezas_rec 
+
+rec %>% count(conta) %>% arrange(conta)
+
+"0.0.00.0.0"
+
+c(
+  "1.0.0.0.00.0.0 - Receitas Correntes",
+  "1.1.0.0.00.0.0 - Impostos, Taxas e Contribuições de Melhoria",
+  "1.1.1.0.00.0.0 - Impostos",
+  "1.1.1.4.51.1.0 - Imposto sobre Serviços de Qualquer Natureza - ISSQN",
+  "1.1.1.2.50.0.0 - Imposto sobre a Propriedade Predial e Territorial Urbana",
+  "1.1.1.2.53.0.0 - Impostos sobre Transmissão Inter Vivos de Bens Imóveis e de Direitos Reais sobre Imóveis",
+  "1.2.1.5.00.0.0 - Contribuições para Regimes Próprios de Previdência e Sistema de Proteção Social",
+  "1.7.0.0.00.0.0 - Transferências Correntes",
+  "2.0.0.0.00.0.0 - Receitas de Capital",
+  "1.1.1.2.51.0.0 - Imposto sobre a Propriedade de Veículos Automotores",
+  "1.1.1.2.52.0.0 - Imposto sobre Transmissão ¿Causa Mortis¿ e Doação de Bens e Direitos"       
+)
 
 desp_fun_PR <- desp_fun %>% filter(sigla_uf == "PR", coluna == "Despesas Empenhadas", substr(conta, 4, 4) == "-") %>%
   group_by(nome_mun) %>%
