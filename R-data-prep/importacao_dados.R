@@ -113,10 +113,10 @@ desp_dca <- readr::read_csv2(
   skip = 4,
   locale = locale(encoding = "WINDOWS-1252"))
 
-## Naturezas Rec
-lista_nrs <- read_excel("data/raw_data/2023_Anexo_II_Portaria_STN_642_Leiaute_MSC_19Fev24.xlsx",
-                                                                  sheet = "NR", skip = 1)
-tab_nrs <- lista_nrs %>% select(NR, Valorizável) %>% mutate(NR = as.character(NR))
+# ## Naturezas Rec
+# lista_nrs <- read_excel("data/raw_data/2023_Anexo_II_Portaria_STN_642_Leiaute_MSC_19Fev24.xlsx",
+#                                                                   sheet = "NR", skip = 1)
+# tab_nrs <- lista_nrs %>% select(NR, Valorizável) %>% mutate(NR = as.character(NR))
 
 
 ## Receitas
@@ -126,9 +126,9 @@ rec <- readr::read_csv2(
   unz(arq_zip, arq_name),
   col_names = c("nome_mun", "cod_mun", "sigla_uf", "pop", "coluna", "conta", "cod_conta", "valor"), 
   skip = 4,
-  locale = locale(encoding = "WINDOWS-1252")) %>%
-  mutate(NR = str_extract(conta, "^[0-9\\.]+") |> str_replace_all("\\.", "")) %>%
-  left_join(tab_nrs)
+  locale = locale(encoding = "WINDOWS-1252")) #%>%
+  #mutate(NR = str_extract(conta, "^[0-9\\.]+") |> str_replace_all("\\.", "")) %>%
+  #left_join(tab_nrs)
 
 
 naturezas_rec <- rec %>% select(conta) %>% distinct() %>% arrange()
