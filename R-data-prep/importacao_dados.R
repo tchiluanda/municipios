@@ -133,18 +133,43 @@ rec <- readr::read_csv2(
 
 naturezas_rec <- rec %>% select(conta) %>% distinct() %>% arrange()
 colunas <- rec %>% select(coluna) %>% distinct() %>% arrange()
+
 origens_rec <- naturezas_rec %>% filter(str_detect(conta, "0\\.0\\.00\\.0\\.0"))
+terceiro_nivel_rec <- naturezas_rec %>% filter(str_detect(conta, ".0\\.00\\.0\\.0"))
 
 ggplot(rec %>% 
          filter(
            coluna == "Receitas Brutas Realizadas",
-           Valorizável == "SIM"
+           conta %in% origens_rec$conta,
+           !str_starts(conta, "7"),
+           !str_starts(conta, "8")
            )
        ) + 
   geom_col(aes(x = valor, y = conta))
 
+maiores_naturezas <- rec %>% 
+  filter(
+    coluna == "Receitas Brutas Realizadas",
+    !(conta %in% origens_rec$conta)
+  ) %>%
+  group_by(conta) %>%
+  summarise(valor = sum(valor)) %>%
+  ungroup() %>%
+  arrange(desc(valor))
 
-naturezas_rec 
+# abertura de, por exemplo, receitas patrimoniais
+ggplot(rec %>% 
+         filter(
+           coluna == "Receitas Brutas Realizadas",
+           #conta %in% terceiro_nivel_rec$conta,
+           str_starts(conta, "1.3"),
+           valor > 0
+         )
+) + 
+  geom_col(aes(x = valor, y = conta))
+
+
+### Dá para ver que as maiores receitas são transferências e impostos (se tirar as capitais, como ficaria?)
 
 rec %>% count(conta) %>% arrange(conta)
 
