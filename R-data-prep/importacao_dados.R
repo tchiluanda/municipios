@@ -97,7 +97,7 @@ desp_pessoal <- read.csv2("./data/raw_data/dtp-mun-2023-sem.csv", skip = 5, file
 
 # * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 ## Desp Função
-# * * *
+# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 # Saídas esperadas: lista de funções, tabela função x subfunção
 
 arq_zip <- "./data/raw_data/dca-mun-2023-desp-funcao.csv.zip"
@@ -174,7 +174,10 @@ tabela_funcao_subfuncao <- bind_rows(mini_tabs_fun)
 #verifica
 totais_fun[29, 2] - totais_fun_subtotais[1,2]
 
-## Desp Economica
+# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+## Desp Econômica
+# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
 arq_zip <- "./data/raw_data/dca-mun-2023-desp.csv.zip"
 arq_name <- unzip(list = TRUE, zipfile = arq_zip)["Name"][1,]
 desp_dca <- readr::read_csv2(
@@ -183,13 +186,14 @@ desp_dca <- readr::read_csv2(
   skip = 4,
   locale = locale(encoding = "WINDOWS-1252"))
 
-# ## Naturezas Rec
+# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+## Receitas
+# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
 # lista_nrs <- read_excel("data/raw_data/2023_Anexo_II_Portaria_STN_642_Leiaute_MSC_19Fev24.xlsx",
 #                                                                   sheet = "NR", skip = 1)
 # tab_nrs <- lista_nrs %>% select(NR, Valorizável) %>% mutate(NR = as.character(NR))
 
-
-## Receitas
 arq_zip <- "./data/raw_data/dca-mun-2023-rec.csv.zip"
 arq_name <- unzip(list = TRUE, zipfile = arq_zip)["Name"][1,]
 rec <- readr::read_csv2(
@@ -201,11 +205,104 @@ rec <- readr::read_csv2(
   #left_join(tab_nrs)
 
 
-naturezas_rec <- rec %>% select(conta) %>% distinct() %>% arrange()
-colunas <- rec %>% select(coluna) %>% distinct() %>% arrange()
+naturezas_rec <- rec %>% select(conta) %>% distinct() %>% arrange(conta)
+colunas_rec <- rec %>% select(coluna) %>% distinct() %>% arrange()
 
 origens_rec <- naturezas_rec %>% filter(str_detect(conta, "0\\.0\\.00\\.0\\.0"))
 terceiro_nivel_rec <- naturezas_rec %>% filter(str_detect(conta, ".0\\.00\\.0\\.0"))
+
+#gera lista de naturezas agregadoras
+codigos_nat_rec <- naturezas_rec %>%
+  filter(substr(conta, 2, 2) == ".") %>%
+  mutate(
+    conta = substr(conta, 1, 12) # tirando o .0 final
+  ) %>% pull()
+
+qde_naturezas <- length(codigos_nat_rec)
+
+tabela_nat_rec_aggreg <- data.frame(
+  natureza = codigos_nat_rec, 
+  agregadora = rep(FALSE, qde_naturezas)
+)
+
+for (i in 1:qde_naturezas) {
+  
+  nat_atual <- tabela_nat_rec_aggreg[i, 1]
+  
+  # 6o nivel
+  if ( substr(nat_atual, 12, 12) != "0" ) {
+    
+    level5 <- paste0( substr(nat_atual, 1, 11), "0" )
+    
+    index_l5 <- which(tabela_nat_rec_aggreg$natureza == level5)
+    
+    print(paste(nat_atual, level5, "Level 5"))
+    
+    if (index_l5 > 0) tabela_nat_rec_aggreg[index_l5, 2] <- TRUE
+    
+  }
+  
+  # 5o nivel
+  if ( substr(nat_atual, 9, 12) != "00.0" ) {
+    
+    level4 <- paste0( substr(nat_atual, 1, 8), "00.0" )
+    
+    index_l4 <- which(tabela_nat_rec_aggreg$natureza == level4)
+    
+    print(paste(nat_atual, level4, "Level 4"))
+    
+    if (index_l4 > 0) tabela_nat_rec_aggreg[index_l4, 2] <- TRUE
+    
+  }
+  
+  # 4o nivel
+  if ( substr(nat_atual, 7, 12) != "0.00.0" ) {
+    
+    level3 <- paste0( substr(nat_atual, 1, 6), "0.00.0" )
+    
+    index_l3 <- which(tabela_nat_rec_aggreg$natureza == level3)
+    
+    print(paste(nat_atual, level3, "Level 3"))
+    
+    if (index_l3 > 0) tabela_nat_rec_aggreg[index_l3, 2] <- TRUE
+    
+  }
+  
+  # 3o nivel
+  if ( substr(nat_atual, 5, 12) != "0.0.00.0" ) {
+    
+    level2 <- paste0( substr(nat_atual, 1, 4), "0.0.00.0" )
+    
+    index_l2 <- which(tabela_nat_rec_aggreg$natureza == level2)
+    
+    print(paste(nat_atual, level2, "Level 2"))
+    
+    if (index_l2 > 0) tabela_nat_rec_aggreg[index_l2, 2] <- TRUE
+    
+  }
+  
+  # 2o nivel
+  if ( substr(nat_atual, 3, 12) != "0.0.0.00.0" ) {
+    
+    level1 <- paste0( substr(nat_atual, 1, 2), "0.0.0.00.0" )
+    
+    index_l1 <- which(tabela_nat_rec_aggreg$natureza == level1)
+    
+    print(paste(nat_atual, level1, "Level 1"))
+    
+    if (index_l1 > 0) tabela_nat_rec_aggreg[index_l1, 2] <- TRUE
+    
+  }
+  
+}
+
+nat_rec_escrituracao <- tabela_nat_rec_aggreg %>% filter(!agregadora) %>% select(natureza) %>% pull()
+
+rec_analysis <- rec %>%
+  mutate(
+    agregadora = ifelse(any(nat_rec_escrituracao == substr(conta, 1, 12)), FALSE, TRUE)
+  )
+
 
 ggplot(rec %>% 
          filter(
