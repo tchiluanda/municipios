@@ -95,7 +95,11 @@ raw_mun_arrec_fed <- read_excel("./data/raw_data/arrecadacao-da-receita-administ
 
 desp_pessoal <- read.csv2("./data/raw_data/dtp-mun-2023-sem.csv", skip = 5, fileEncoding = "Latin1")
 
+# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 ## Desp Função
+# * * *
+# Saídas esperadas: lista de funções, tabela função x subfunção
+
 arq_zip <- "./data/raw_data/dca-mun-2023-desp-funcao.csv.zip"
 arq_name <- unzip(list = TRUE, zipfile = arq_zip)["Name"][1,]
 desp_fun <- readr::read_csv2(
@@ -103,6 +107,72 @@ desp_fun <- readr::read_csv2(
   col_names = c("nome_mun", "cod_mun", "sigla_uf", "pop", "coluna", "conta", "cod_conta", "valor"), 
   skip = 4, 
   locale = locale(encoding = "WINDOWS-1252"))
+
+### Contas
+
+contas_fun <- desp_fun %>% select(conta) %>% distinct()
+nomes_contas_fun_totais <- c("Despesas Exceto Intraorçamentárias", 	
+                             "Despesas Intraorçamentárias")
+
+nomes_contas_fun <- contas_fun %>% filter(str_sub(conta,4,4) == "-") %>% pull()
+
+#gera lista
+nomes_contas_fun %>% sort() %>% dput
+
+colunas_fun <- desp_fun %>% select(coluna) %>% distinct()
+
+totais <- desp_fun %>%
+  filter(conta %in% nomes_contas_fun_totais) %>%
+  group_by(coluna) %>%
+  summarise(valor = sum(valor)) %>%
+  pivot_wider(names_from = coluna, values_from = valor)
+
+totais$`Despesas Empenhadas`-totais$`Despesas Liquidadas`
+totais$`Despesas Liquidadas`-totais$`Despesas Pagas`
+
+totais_fun <- desp_fun %>%
+  filter(conta %in% nomes_contas_fun, coluna == "Despesas Empenhadas") %>%
+  group_by(conta) %>%
+  summarise(valor = sum(valor)) %>%
+  janitor::adorn_totals()
+
+totais_fun_subtotais <- desp_fun %>%
+  filter(conta %in% nomes_contas_fun_totais, coluna == "Despesas Empenhadas") %>%
+  group_by(conta) %>%
+  summarise(valor = sum(valor))
+
+### Detalhamento das Funções
+
+codigos_fun <- substr(sort(nomes_contas_fun), 1,2)
+
+mini_tabs_fun <- list()
+
+for (codigo in codigos_fun) {
+  
+  subfuncoes <- contas_fun %>% 
+    filter(
+      substr(conta, 1, 3) == paste0(codigo, ".") | conta == paste0("FU", codigo, " - Demais Subfunções")
+    ) %>%
+    pull() %>% sort()
+  
+  qde_subs <- length(subfuncoes)
+  
+  mini_tab_fun <- data.frame(funcao = rep(codigo, qde_subs), subfuncao = subfuncoes)
+  
+  mini_tabs_fun[[codigo]] <- mini_tab_fun
+  
+}
+
+#gera tabela de funcao / subfuncao
+
+tabela_funcao_subfuncao <- bind_rows(mini_tabs_fun)
+
+# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+
+
+#verifica
+totais_fun[29, 2] - totais_fun_subtotais[1,2]
 
 ## Desp Economica
 arq_zip <- "./data/raw_data/dca-mun-2023-desp.csv.zip"
@@ -188,6 +258,9 @@ c(
   "1.1.1.2.51.0.0 - Imposto sobre a Propriedade de Veículos Automotores",
   "1.1.1.2.52.0.0 - Imposto sobre Transmissão ¿Causa Mortis¿ e Doação de Bens e Direitos"       
 )
+
+
+# Exemplo Paraná ----------------------------------------------------------
 
 desp_fun_PR <- desp_fun %>% filter(sigla_uf == "PR", coluna == "Despesas Empenhadas", substr(conta, 4, 4) == "-") %>%
   group_by(nome_mun) %>%
