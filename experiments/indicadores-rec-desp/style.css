@@ -66,4 +66,5 @@ select {
     height: 1.5rem;
     background-color: green;
     transition: width .4s;
+    width: 0;
 }
