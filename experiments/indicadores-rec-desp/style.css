@@ -1,0 +1,57 @@
+* {
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+
+:root {
+    --topbar-h: 50px;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: snow;
+    color: #333;
+}
+
+.hero {
+    height: 100vh;
+    width: 100%;
+    padding: 1rem;
+}
+
+.container-cards {
+    display: flex;
+}
+
+.card {
+    border-radius: 5px;
+    border: 2px solid currentColor;
+    width: 400px;
+    padding: 1rem;
+}
+
+.card h3 {
+    margin-top: 0;
+}
+
+.card svg {
+    width: 100%;
+    border: 1px solid currentColor;
+}
+
+.card .container-mini-chart {
+    position: relative;
+}
+
+.card p.label {
+    position: absolute;
+    margin: 0;
+    transform: translateY(-100%);
+    font-size: 12px;
+    padding-left: 1px;
+}
+
+rect {
+    fill: steelblue;
+}

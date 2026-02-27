@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indicadores de Receitas e Despesas</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="hero">
+        <div class="indicadores">
+
+            <h2>Receitas e Despesas em Destaque</h2>
+
+            <div class="container-cards">
+
+                <div class="card" data-chart-name="impostos">
+                    <h3 class="titulo-indicador">Impostos</h3>
+                    <div class="container-mini-chart">
+                        <svg class="mini-chart"></svg>
+                    </div>
+                </div>
+
+                <div class="card" data-chart-name="impostos x pessoal">
+                    <h3 class="titulo-indicador">Receita de Impostos x Despesas com Pessoal</h3>
+                    <div class="container-mini-chart">
+                        <svg class="mini-chart"></svg>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+
+        <div class="monte-o-seu"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="script.js"></script>    
+</body>
+</html>
