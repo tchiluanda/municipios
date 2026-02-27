@@ -22,10 +22,11 @@ body {
 
 .container-cards {
     display: flex;
+    gap: 2rem;
 }
 
 .card {
-    border-radius: 5px;
+    border-radius: 10px;
     border: 2px solid currentColor;
     width: 400px;
     padding: 1rem;
@@ -52,6 +53,17 @@ body {
     padding-left: 1px;
 }
 
-rect {
-    fill: steelblue;
+select {
+    margin-bottom: .5rem;
+    margin-top: .5rem;
+    background-color: transparent;
+    font-size: 1rem;
+    border-radius: 5px;
+    padding: .5rem;
+}
+
+.bar {
+    height: 1.5rem;
+    background-color: green;
+    transition: width .4s;
 }

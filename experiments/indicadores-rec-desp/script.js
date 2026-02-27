@@ -75,6 +75,7 @@ class Chart {
             .attr("y", d => this.y_scale(d.label))
             .attr("width", d => this.w_scale(d.value))
             .attr("height", this.y_scale.bandwidth() / 2)
+            .attr("fill", d => d.tipo == "despesa" ? "firebrick" : "steelblue")
         ;
 
         this.chart_containerd3.selectAll("p").data(this.infos).join("p")
@@ -96,5 +97,62 @@ const c1 = new Chart("[data-chart-name='impostos']",
 const c2 = new Chart("[data-chart-name='impostos x pessoal']", 
     [
         { "label": "Impostos", "value": 285517723132.57 },
-        { "label": "Pessoal", "value": 589671708216.08 }
+        { "label": "Pessoal", "value": 589671708216.08, "tipo" : "despesa" }
     ]);
+
+const c3 = new Chart("[data-chart-name='royalties x iptu']", 
+    [
+        { "label": "IPTU", "value": 72588817524.29 },
+        { "label": "Royalties", "value": 33641637452.78 }
+    ]);
+
+
+const sel1 = document.querySelector("#item1");
+const sel2 = document.querySelector("#item2");
+
+const bar1 = document.querySelector(".bar1");
+const bar2 = document.querySelector(".bar2");
+
+const estado = { 
+    bar1 : "Impostos",
+    bar2 : "Impostos"
+}
+
+data.map(d => d.label).forEach(d => {
+
+    const option = document.createElement("option");
+
+    option.value = d;
+    option.text = d;
+
+    sel1.appendChild(option);
+    sel2.appendChild(option.cloneNode(true));
+})
+
+sel1.addEventListener("change", atualiza);
+sel2.addEventListener("change", atualiza);
+
+const max = d3.max(data, d => d.value);
+console.log(max);
+
+function atualiza(e) {
+    console.log(e, e.target, e.target.value);
+
+    const opcao = e.target.value;
+    const bar = e.target.dataset.bar;
+    console.log(bar);
+
+    estado[bar] = opcao;
+
+    const dado = data.filter(d => d.label == opcao)[0];
+    const valor = dado.value;
+
+    console.log(dado);
+
+    const barra = document.querySelector("." + bar);
+    console.log(barra);
+    console.log(valor, max, (valor/max) + "%");
+    barra.style.width = 100*(valor / max) + "%";
+
+
+}
