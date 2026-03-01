@@ -186,6 +186,11 @@ desp_dca <- readr::read_csv2(
   skip = 4,
   locale = locale(encoding = "WINDOWS-1252"))
 
+desp_dca %>% select(conta) %>% filter(substr(conta,11,12) != "00") %>% distinct() %>% pull()
+
+
+
+
 # * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 ## Receitas
 # * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -208,8 +213,12 @@ rec <- readr::read_csv2(
 naturezas_rec <- rec %>% select(conta) %>% distinct() %>% arrange(conta)
 colunas_rec <- rec %>% select(coluna) %>% distinct() %>% arrange()
 
-origens_rec <- naturezas_rec %>% filter(str_detect(conta, "0\\.0\\.00\\.0\\.0"))
-terceiro_nivel_rec <- naturezas_rec %>% filter(str_detect(conta, ".0\\.00\\.0\\.0"))
+origens_rec <- naturezas_rec %>% filter(str_detect(conta, "0\\.0\\.00\\.0\\.0"), substr(conta, 3,3) != "0")
+terceiro_nivel_rec <- naturezas_rec %>% filter(
+  str_detect(conta, ".0\\.00\\.0\\.0"), 
+  substr(conta, 3,3) != "0", 
+  substr(conta, 3,3) != "0"
+)
 
 #gera lista de naturezas agregadoras
 codigos_nat_rec <- naturezas_rec %>%
@@ -300,13 +309,19 @@ nat_rec_escrituracao <- tabela_nat_rec_aggreg %>% filter(!agregadora) %>% select
 
 rec_analysis <- rec %>%
   mutate(
-    agregadora = ifelse(any(nat_rec_escrituracao == substr(conta, 1, 12)), FALSE, TRUE)
-  )
-
+    codigo = substr(conta, 1, 12),
+    agregadora = !(codigo %in% nat_rec_escrituracao)
+  ) %>%
+  filter(!agregadora, coluna == "Receitas Brutas Realizadas") %>%
+  group_by(conta) %>%
+  summarize(valor = sum(valor))
+  
+ggplot(rec_analysis %>% filter(valor > 2e10)) + geom_col(aes(x = valor, y = reorder(conta, valor)))
 
 ggplot(rec %>% 
          filter(
            coluna == "Receitas Brutas Realizadas",
+           #conta %in% terceiro_nivel_rec$conta,
            conta %in% origens_rec$conta,
            !str_starts(conta, "7"),
            !str_starts(conta, "8")
@@ -328,7 +343,7 @@ maiores_naturezas <- rec %>%
 ggplot(rec %>% 
          filter(
            coluna == "Receitas Brutas Realizadas",
-           #conta %in% terceiro_nivel_rec$conta,
+           conta %in% terceiro_nivel_rec$conta,
            str_starts(conta, "1.3"),
            valor > 0
          )
@@ -339,22 +354,6 @@ ggplot(rec %>%
 ### Dá para ver que as maiores receitas são transferências e impostos (se tirar as capitais, como ficaria?)
 
 rec %>% count(conta) %>% arrange(conta)
-
-"0.0.00.0.0"
-
-c(
-  "1.0.0.0.00.0.0 - Receitas Correntes",
-  "1.1.0.0.00.0.0 - Impostos, Taxas e Contribuições de Melhoria",
-  "1.1.1.0.00.0.0 - Impostos",
-  "1.1.1.4.51.1.0 - Imposto sobre Serviços de Qualquer Natureza - ISSQN",
-  "1.1.1.2.50.0.0 - Imposto sobre a Propriedade Predial e Territorial Urbana",
-  "1.1.1.2.53.0.0 - Impostos sobre Transmissão Inter Vivos de Bens Imóveis e de Direitos Reais sobre Imóveis",
-  "1.2.1.5.00.0.0 - Contribuições para Regimes Próprios de Previdência e Sistema de Proteção Social",
-  "1.7.0.0.00.0.0 - Transferências Correntes",
-  "2.0.0.0.00.0.0 - Receitas de Capital",
-  "1.1.1.2.51.0.0 - Imposto sobre a Propriedade de Veículos Automotores",
-  "1.1.1.2.52.0.0 - Imposto sobre Transmissão ¿Causa Mortis¿ e Doação de Bens e Direitos"       
-)
 
 
 # Exemplo Paraná ----------------------------------------------------------
