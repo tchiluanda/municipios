@@ -80,3 +80,76 @@ ggplot(principal_despesa, aes(x = x, y = y, fill = funcao)) +
 
 principal_despesa %>% count(funcao) %>% arrange(-n)
 
+#--
+
+fun_rank_num <- fun %>%
+  group_by(nome_mun) %>%
+  mutate(rank = rank(-valor)) %>%
+  ungroup()
+
+freq_top_4 <- fun %>%
+  group_by(nome_mun) %>%
+  mutate(rank = rank(-valor)) %>%
+  filter(rank <= 4) %>%
+  ungroup() %>%
+  count(funcao) %>%
+  mutate(proporcao_funcao_nos_top4 = 100 * n / n_distinct(fun$nome_mun)) %>%
+  arrange(-proporcao_funcao_nos_top4)
+
+freq_top_3
+
+fun$nome_mun %>% unique() %>% length()
+
+# n_distinct(fun$nome_mun) 
+# equivale a
+# length(unique(fun$nome_mun))
+
+library(geobr)
+
+geo_mun <- geobr::read_municipality()
+
+fun_rank_cod_mun <- fun %>%
+  group_by(cod_mun) %>%
+  mutate(rank = stringr::str_pad(rank(-valor), width = 2, side = "left", pad = "0")) %>%
+  ungroup()
+
+principal_desp_cod_mun <- fun_rank_cod_mun %>%
+  filter(rank == "01")
+
+principal_desp_cod_mun %>% count(funcao) %>% mutate(prop = n / length(unique(fun$nome_mun))) %>% arrange(-prop)
+
+principal_desp_para_grafico <- principal_desp_cod_mun %>%
+  mutate(
+    funcao = fct_other(funcao, keep = c("10 - Saúde", "12 - Educação"), other_level = "Outros")
+  ) %>% 
+  right_join(geo_mun, by = c("cod_mun" = "code_muni"))
+
+ggplot(principal_desp_para_grafico) + 
+  geom_sf(aes(fill = funcao, geometry = geom), color = NA) +
+  scale_fill_manual(values = c("12 - Educação" = "darkgreen", "10 - Saúde" = "steelblue", "Outros" = "lightyellow")) +
+  facet_wrap(~sigla_uf) +
+  theme_minimal()
+
+principal_desp_por_estado <- principal_desp_cod_mun %>%
+  group_by(sigla_uf) %>%
+  mutate(total_uf = n()) %>%
+  ungroup() %>%
+  group_by(sigla_uf, funcao) %>%
+  summarise(
+    total_uf = first(total_uf),
+    qde_funcao = n(),
+    prop_fun_uf = qde_funcao / total_uf)
+
+ggplot(principal_desp_por_estado %>%
+         mutate(
+           funcao = fct_other(funcao, keep = c("10 - Saúde", "12 - Educação"), other_level = "Outros")
+         )
+       ) +
+  geom_col(aes(y = sigla_uf, x = prop_fun_uf, fill = funcao), position = "stack") +
+  labs(title = "qde de municípios do estado que possuem como sua principal despesa...") +
+  theme_minimal()
+
+ggplot(fun_rank2, aes(x = desp_top5, y = 0)) + 
+  geom_jitter(aes(color = desp_top5 > 0.8)) +
+  #geom_boxplot() 
+  theme_minimal()
