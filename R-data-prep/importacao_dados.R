@@ -100,7 +100,7 @@ desp_pessoal <- read.csv2("./data/raw_data/dtp-mun-2023-sem.csv", skip = 5, file
 # * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 # Saídas esperadas: lista de funções, tabela função x subfunção
 
-arq_zip <- "./data/raw_data/dca-mun-2023-desp-funcao.csv.zip"
+arq_zip <- "./data/raw_data/dca-mun-2024-desp-funcao.zip"
 arq_name <- unzip(list = TRUE, zipfile = arq_zip)["Name"][1,]
 desp_fun <- readr::read_csv2(
   unz(arq_zip, arq_name), 
@@ -167,8 +167,9 @@ for (codigo in codigos_fun) {
 
 tabela_funcao_subfuncao <- bind_rows(mini_tabs_fun)
 
-# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
+
+# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 
 #verifica
