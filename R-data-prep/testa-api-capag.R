@@ -4,13 +4,12 @@ library(jsonlite)
 
 url <- "https://apiapex.tesouro.gov.br/aria/v1/previa-fiscal-hom/custom/capag_"
 
-pega_capag <- function(cod_ibge, ano = "2026", tipo = "municipio") {
+pega_capag <- function(cod_ibge, tipo = "municipio") {
   tryCatch(
     {
       resp <- request(paste0(url, tipo)) |>
         req_url_query(
-          codigoIbge = cod_ibge,
-          ano = ano
+          codigoIbge = cod_ibge
         ) |>
         req_perform()
       
@@ -19,7 +18,7 @@ pega_capag <- function(cod_ibge, ano = "2026", tipo = "municipio") {
       
       data$codigoIbge <- cod_ibge
       
-      print(paste0(url, tipo, "?codigoIbge=", cod_ibge, "&ano=", ano, " | ", "CAPAG: ", data$registros$capag) )
+      print(paste0(url, tipo, "?codigoIbge=", cod_ibge, " | ", "CAPAG: ", data$registros$capag) )
       
       #return(data)
       
@@ -32,9 +31,10 @@ pega_capag <- function(cod_ibge, ano = "2026", tipo = "municipio") {
 
 data <- pega_capag_municipio("2200053")
 
-codes_munis <- geo_mun %>% filter(code_state == "41") %>% select(code_muni) %>% pull(code_muni) %>% sample(10)
+codes_munis <- geo_mun %>% filter(code_state == "42") %>% select(code_muni) %>% pull(code_muni) %>% sample(10)
+geo_mun %>% filter(code_muni %in% codes_munis) %>% pull(code_muni, name_muni)
 
-resultados <- map(codes_munis, pega_capag_municipio)
+resultados <- map(codes_munis, pega_capag, tipo = "municipio")
 
 codes_ufs <- geo_mun %>% pull(code_state) %>% unique()
 
