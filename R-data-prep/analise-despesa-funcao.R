@@ -73,8 +73,9 @@ ggplot(principal_despesa, aes(x = x, y = y, color = funcao)) +
   #scale_fill_manual(values = c("12 - Educação" = "darkgreen", "10 - Saúde" = "forestgreen", "Outros" = "gray")) +
   theme_minimal()
 
-geom_raster() #+
+
 ggplot(principal_despesa, aes(x = x, y = y, fill = funcao)) +
+  geom_raster() #+
   #scale_fill_manual(values = c("12 - Educação" = "darkgreen", "10 - Saúde" = "forestgreen", "Outros" = "gray")) +
   theme_minimal()
 
@@ -87,16 +88,26 @@ fun_rank_num <- fun %>%
   mutate(rank = rank(-valor)) %>%
   ungroup()
 
-freq_top_4 <- fun %>%
+freq_top_5 <- fun %>%
   group_by(nome_mun) %>%
   mutate(rank = rank(-valor)) %>%
-  filter(rank <= 4) %>%
+  filter(rank <= 5) %>%
   ungroup() %>%
   count(funcao) %>%
-  mutate(proporcao_funcao_nos_top4 = 100 * n / n_distinct(fun$nome_mun)) %>%
-  arrange(-proporcao_funcao_nos_top4)
+  mutate(proporcao_funcao_nos_top5 = 100 * n / n_distinct(fun$nome_mun)) %>%
+  arrange(-proporcao_funcao_nos_top5)
 
-freq_top_3
+#nao tem educacao ou saude nos top
+mun_desp_rankeadas <- fun %>%
+  group_by(nome_mun) %>%
+  mutate(rank = rank(-valor)) %>% 
+  ungroup()
+
+mun_educ_fora_top5 <- mun_desp_rankeadas %>%
+  filter(funcao == "12 - Educação", rank > 5)
+
+mun_saude_fora_top5 <- mun_desp_rankeadas %>%
+  filter(funcao == "10 - Saúde")
 
 fun$nome_mun %>% unique() %>% length()
 
@@ -127,7 +138,7 @@ principal_desp_para_grafico <- principal_desp_cod_mun %>%
 ggplot(principal_desp_para_grafico) + 
   geom_sf(aes(fill = funcao, geometry = geom), color = NA) +
   scale_fill_manual(values = c("12 - Educação" = "darkgreen", "10 - Saúde" = "steelblue", "Outros" = "lightyellow")) +
-  facet_wrap(~sigla_uf) +
+  #facet_wrap(~sigla_uf) +
   theme_minimal()
 
 principal_desp_por_estado <- principal_desp_cod_mun %>%
