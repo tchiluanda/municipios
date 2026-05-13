@@ -2,7 +2,7 @@ library(tidyverse)
 library(readxl)
 library(ggbeeswarm)
 
-arq_zip <- "./data/raw_data/dca-mun-2024-desp-funcao.zip"
+arq_zip <- "../data/raw_data/dca-mun-2024-desp-funcao.zip"
 arq_name <- unzip(list = TRUE, zipfile = arq_zip)["Name"][1,]
 desp_fun <- readr::read_csv2(
   unz(arq_zip, arq_name), 
