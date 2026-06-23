@@ -19,7 +19,11 @@ write_file(
 
 # municipios --------------------------------------------------------------
 
-mun <- geobr::read_municipal_seat()
+mun <- geobr::read_municipal_seat(year = 2022
+                                  )
+
+saveRDS(mun, "posicoes_mun.rds
+        ")
 
 arq_zip <- "./data/raw_data/IBGE_perfil_mun_2017_xls.zip"
 arq <- unzip(list = TRUE, zipfile = arq_zip)["Name"][1,]
@@ -32,9 +36,9 @@ file.remove(arq)
 
 # municipios - area -------------------------------------------------------
 
-mun_area <- geobr::read_municipality()
+mun_area <- geobr::read_municipality(year = 2022)
 
-head(mun_area)
+saveRDS(mun_area, "mapa_mun.rds")
 
 
 # join --------------------------------------------------------------------
@@ -117,4 +121,13 @@ mun_areas_geojson <- sf_geojson(mun_areas, simplify = TRUE, digits = 6)
 
 write_file(mun_areas_geojson, './map_svg/areas.json')
 
+
+states <- geobr::read_state(year = 2022, simplified = T)
+saveRDS(states, "estados.rds")
+
+ggplot() + 
+  geom_sf(data = states, fill = NA) + 
+  geom_sf(data = mun, size = .2) #+
+  #xlim(c(-55,-45)) +
+  #ylim(c(-25, -20))
 
