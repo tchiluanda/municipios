@@ -1,3 +1,5 @@
+// o force layout só precisa ser calculado para os centroides. e aí podemos ir atualizando os xc? ver como faria para sincronizar
+
 const cv1 = document.querySelector(".mapa-principal");
 const ctx1 = cv1.getContext("2d");
 
@@ -41,6 +43,8 @@ function vis(data) {
     mapa = new Mapa(features, w, h);
 
 
+
+
 }
 
 class Mapa {
@@ -49,6 +53,8 @@ class Mapa {
 
         this.w = w;
         this.h = h;
+
+        this.t = 0;
 
         this.features = features;
 
@@ -93,7 +99,9 @@ class Mapa {
 
     }
 
-    draw_interpolado(t) {
+    draw_interpolado(t = undefined) {
+
+        if (!t) t = this.t;
 
         this.features.forEach(poligono => {
 
@@ -135,7 +143,19 @@ class Mapa {
 
     }
 
+}
 
+function desenha_interpolado(t) {
 
+    clear();
+    mapa.draw_interpolado(t);
 
 }
+
+function desenha() {
+
+    clear();
+    mapa.draw_interpolado();
+
+}
+
