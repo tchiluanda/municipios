@@ -8,7 +8,7 @@ function clear() {
     ctx1.clearRect(0, 0, w, h);
 }
 
-let mapa;
+let mapa, max_pop, r_scale;
 
 console.log(cv1, w,h);
 
@@ -26,6 +26,15 @@ fetch("areas.json")
 function vis(data) {
 
     console.log(data);
+
+    max_pop = data.features.map(d => d.properties.pop).reduce(
+        (pv, cv) => pv > cv ? pv : cv
+    );    
+
+    r_scale = d3.scaleSqrt()
+        .domain([0, max_pop])
+        .range([1, 20]) 
+    ;
 
     const features = data.features;
 
@@ -116,10 +125,11 @@ class Mapa {
 
             const [ xc, yc ] = this.pathSVG.centroid(poligono);
             // const {xc, yc} = poligono.properties;
+            const r = r_scale(poligono.properties.pop);
 
             const forma_original = this.pathSVG(poligono);
 
-            poligono.interpolador = flubber.toCircle(forma_original, xc, yc, 5);
+            poligono.interpolador = flubber.toCircle(forma_original, xc, yc, r);
 
         })
 
