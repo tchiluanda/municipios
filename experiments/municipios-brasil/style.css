@@ -2,10 +2,24 @@
     box-sizing: border-box;
 }
 
+:root {
+    --destaque: #633806;
+}
+
 body {
     margin: 0;
     padding: 0;
-    background-color: whitesmoke;
-    color: #333;
+    background-color: #F7F3EB;
+    color: #1E1A12;
     font-family: 'Rawline', serif;
+}
+
+.largura-limitada {
+    margin: 0 auto;
+    max-width: 580px;
+}
+
+h1, h2, h3, h4 {
+    font-family: 'Playfair';
+    color: var(--destaque);
 }
