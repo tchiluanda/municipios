@@ -42,6 +42,13 @@ function vis(data) {
 
     mapa = new Mapa(features, w, h);
 
+    gsap.to(mapa, {
+        t : 1,
+        duration: 3,
+        ease: "power1.inOut",
+        onUpdate : desenha
+    });
+
 
 
 
@@ -73,8 +80,6 @@ class Mapa {
         ctx1.strokeStyle = "#F7F3EB";
         ctx1.lineWidth = 0.3;
 
-        //this.draw(features);
-
     }
 
     draw_mapa(poligonos) {
@@ -105,11 +110,12 @@ class Mapa {
 
         this.features.forEach(poligono => {
 
+                /*
                 if (poligono.properties.abbrev_state == "PR") {
                     ctx1.fillStyle = "dodgerblue";
                 } else {
                     ctx1.fillStyle = "#0F6E56";
-                }
+                }*/
 
                 const pathSVG = poligono.interpolador(t);
 
@@ -154,6 +160,7 @@ function desenha_interpolado(t) {
 
 function desenha() {
 
+    //console.log(mapa.t);
     clear();
     mapa.draw_interpolado();
 
