@@ -42,15 +42,7 @@ function vis(data) {
 
     mapa = new Mapa(features, w, h);
 
-    gsap.to(mapa, {
-        t : 1,
-        duration: 3,
-        ease: "power1.inOut",
-        onUpdate : desenha
-    });
-
-
-
+    mapa.draw_mapa();
 
 }
 
@@ -82,9 +74,9 @@ class Mapa {
 
     }
 
-    draw_mapa(poligonos) {
+    draw_mapa() {
 
-        console.log(poligonos); 
+        const poligonos = this.features;
 
         poligonos.forEach(poligono => {
 
@@ -166,3 +158,23 @@ function desenha() {
 
 }
 
+liga.addEventListener("click", e => {
+
+    const t_final = liga.textContent == "vai" ? 1 : 0;
+
+    console.log(t_final);
+
+    if (liga.textContent == "vai") {
+        liga.textContent = "desvai";
+    } else {
+        liga.textContent = "vai";
+    }
+
+    gsap.to(mapa, {
+        t : t_final,
+        duration: 3,
+        ease: "power1.inOut",
+        onUpdate : desenha
+    });
+
+})
