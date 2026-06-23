@@ -4,6 +4,12 @@ const ctx1 = cv1.getContext("2d");
 const w = +window.getComputedStyle(cv1).width.slice(0,-2);
 const h = +window.getComputedStyle(cv1).height.slice(0,-2);
 
+function clear() {
+    ctx1.clearRect(0, 0, w, h);
+}
+
+let mapa;
+
 console.log(cv1, w,h);
 
 cv1.setAttribute("width", w);
@@ -23,7 +29,7 @@ function vis(data) {
 
     const features = data.features;
 
-    const mapa = new Mapa(features, w, h);
+    mapa = new Mapa(features, w, h);
 
 
 }
@@ -46,15 +52,17 @@ class Mapa {
         this.path = d3.geoPath().projection(this.proj).context(ctx1);
         this.pathSVG = d3.geoPath().projection(this.proj);
 
+        this.cria_interpoladores();
+
         ctx1.fillStyle = "#0F6E56";
         ctx1.strokeStyle = "#F7F3EB";
         ctx1.lineWidth = 0.3;
 
-        this.draw(features);
+        //this.draw(features);
 
     }
 
-    draw(poligonos) {
+    draw_mapa(poligonos) {
 
         console.log(poligonos); 
 
@@ -73,6 +81,47 @@ class Mapa {
 
             }
         )
+
+    }
+
+    draw_interpolado(t) {
+
+        this.features.forEach(poligono => {
+
+                if (poligono.properties.abbrev_state == "PR") {
+                    ctx1.fillStyle = "dodgerblue";
+                } else {
+                    ctx1.fillStyle = "#0F6E56";
+                }
+
+                const pathSVG = poligono.interpolador(t);
+
+                // gera um path2D para ser passado ao método fill
+
+                const path2D = new Path2D(pathSVG);
+
+                //ctx1.beginPath();
+                //this.path(poligono);
+                ctx1.fill(path2D);
+                ctx1.stroke(path2D);
+
+            }
+        )
+
+    }
+
+    cria_interpoladores() {
+
+        this.features.forEach(poligono => {
+
+            const [ xc, yc ] = this.pathSVG.centroid(poligono);
+            // const {xc, yc} = poligono.properties;
+
+            const forma_original = this.pathSVG(poligono);
+
+            poligono.interpolador = flubber.toCircle(forma_original, xc, yc, 5);
+
+        })
 
     }
 
