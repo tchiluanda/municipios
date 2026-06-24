@@ -59,14 +59,15 @@ class Mapa {
 
         this.proj = d3.geoMercator()
             .center([-55, -15])
-            .scale(950)
+            .scale(920)
             .translate([ w / 2, h / 2])
         ;
 
         this.path = d3.geoPath().projection(this.proj).context(ctx1);
         this.pathSVG = d3.geoPath().projection(this.proj);
 
-        this.cria_interpoladores();
+        this.calcula_posicoes_force_layout();
+        //this.cria_interpoladores();
 
         ctx1.fillStyle = "#0F6E56";
         ctx1.strokeStyle = "#F7F3EB";
@@ -127,17 +128,63 @@ class Mapa {
 
     cria_interpoladores() {
 
-        this.features.forEach(poligono => {
+        console.log("criando interpoladores");
 
-            const [ xc, yc ] = this.pathSVG.centroid(poligono);
-            // const {xc, yc} = poligono.properties;
-            const r = r_scale(poligono.properties.pop);
+        this.features.forEach(poligono => {
 
             const forma_original = this.pathSVG(poligono);
 
-            poligono.interpolador = flubber.toCircle(forma_original, xc, yc, r);
+            poligono.interpolador = flubber.toCircle(forma_original, poligono.x, poligono.y, poligono.r);
 
         })
+
+    }
+
+    calcula_posicoes_force_layout() {
+
+        this.features.forEach(poligono => {
+
+            const [ xc, yc ] = this.pathSVG.centroid(poligono);
+
+            const r = r_scale(poligono.properties.pop);
+
+            poligono.x0 = xc;
+            poligono.y0 = yc;
+            poligono.r = r;
+            poligono.x = xc;
+            poligono.y = yc;
+
+        })
+
+        this.sim = d3.forceSimulation().stop();
+
+        const strength = 0.04;
+
+        this.sim
+              .velocityDecay(0.2)
+              //.force('x', d3.forceX().strength(strength).x(d => d.x0))
+              //.force('y', d3.forceY().strength(strength).y(d => d.y0))
+              .force('collision', d3.forceCollide().strength(strength*1.5).radius(d => d.r))
+              .alphaMin(0.2)
+              /* comentando para não movimentar as bolhas enquanto atualiza
+              .on('tick', () => {
+
+                d3.selectAll('circle')
+                  .attr('cx', d => d.x)
+                  .attr('cy', d => d.y);
+
+              })
+              */
+              .on('end', () => {
+                  console.log('terminou');
+                  this.cria_interpoladores();
+                })
+              .stop()
+        ;
+
+        this.sim.nodes(this.features);
+
+        this.sim.alpha(1).restart();
 
     }
 
