@@ -14,8 +14,12 @@ let mapa, max_pop, r_scale;
 
 console.log(cv1, w,h);
 
-cv1.setAttribute("width", w);
-cv1.setAttribute("height", h);
+const resolution = 4;
+
+cv1.setAttribute("width", w * resolution);
+cv1.setAttribute("height", h * resolution);
+
+ctx1.setTransform(resolution, 0, 0, resolution, 0, 0);
 
 fetch("areas.json")
     .then(response => response.json())
@@ -81,11 +85,14 @@ class Mapa {
 
         poligonos.forEach(poligono => {
 
-                if (poligono.properties.abbrev_state == "PR") {
+                /*
+                if (poligono.properties.pop <= 50000) {
                     ctx1.fillStyle = "dodgerblue";
+                } else if ( (poligono.properties.pop > 50000) & (poligono.properties.pop < 500000) ) {
+                    ctx1.fillStyle = "steelblue"
                 } else {
-                    ctx1.fillStyle = "#0F6E56";
-                }
+                    ctx1.fillStyle = "darksteelblue";
+                }*/ 
 
                 ctx1.beginPath();
                 this.path(poligono);
@@ -104,10 +111,12 @@ class Mapa {
         this.features.forEach(poligono => {
 
                 /*
-                if (poligono.properties.abbrev_state == "PR") {
+                if (poligono.properties.pop <= 50000) {
                     ctx1.fillStyle = "dodgerblue";
+                } else if ( (poligono.properties.pop > 50000) & (poligono.properties.pop < 500000) ) {
+                    ctx1.fillStyle = "steelblue"
                 } else {
-                    ctx1.fillStyle = "#0F6E56";
+                    ctx1.fillStyle = "darksteelblue";
                 }*/
 
                 const pathSVG = poligono.interpolador(t);
@@ -219,7 +228,7 @@ liga.addEventListener("click", e => {
 
     gsap.to(mapa, {
         t : t_final,
-        duration: 3,
+        duration: 5,
         ease: "power1.inOut",
         onUpdate : desenha
     });
