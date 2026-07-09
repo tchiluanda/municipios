@@ -21,10 +21,10 @@ cv1.setAttribute("height", h * resolution);
 
 ctx1.setTransform(resolution, 0, 0, resolution, 0, 0);
 
-fetch("areas.json")
+fetch("areas-ajustadas.json")
     .then(response => response.json())
     .then(data => {
-
+        console.log(data);
         vis(data);
 
     });
@@ -74,8 +74,8 @@ class Mapa {
         //this.cria_interpoladores();
 
         ctx1.fillStyle = "#0F6E56";
-        ctx1.strokeStyle = "#F7F3EB";
-        ctx1.lineWidth = 0.3;
+        ctx1.strokeStyle = "#F7F3EB50";
+        ctx1.lineWidth = 1;
 
     }
 
@@ -101,6 +101,22 @@ class Mapa {
 
             }
         )
+
+    }
+
+    draw_mapa_svg() {
+
+        const poligonos = this.features;
+
+        d3.select("svg.mapa-svg")
+            .selectAll("path")
+            .data(poligonos)
+            .join("path")
+            .attr("d", this.pathSVG)
+            .append("title")
+              .text(d => `${d.properties.name_muni} ( ${d.properties.abbrev_state} ) | ${d.properties.code_muni}`)
+        ;
+
 
     }
 
