@@ -131,3 +131,13 @@ ggplot() +
   #xlim(c(-55,-45)) +
   #ylim(c(-25, -20))
 
+
+
+# cidades com problemas no Flubber ----------------------------------------
+mun_probs <- c(1500909,5101704,5213103,5220702,1507805,2807600)
+mun_prob <- mun_area %>% filter(code_muni == mun_probs[1]) 
+ggplot(mun_prob) + geom_sf() + labs(title = paste0(mun_prob$name_muni, " (", mun_prob$abbrev_state, ") | ", mun_prob$code_muni))
+
+mun_area |>
+  filter(st_geometry_type(geometry) == "MULTIPOLYGON")
+                                    

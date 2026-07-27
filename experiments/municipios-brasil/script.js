@@ -14,13 +14,17 @@ let mapa, max_pop, r_scale;
 
 console.log(cv1, w,h);
 
-cv1.setAttribute("width", w);
-cv1.setAttribute("height", h);
+const resolution = 4;
 
-fetch("areas.json")
+cv1.setAttribute("width", w * resolution);
+cv1.setAttribute("height", h * resolution);
+
+ctx1.setTransform(resolution, 0, 0, resolution, 0, 0);
+
+fetch("areas-ajustadas.json")
     .then(response => response.json())
     .then(data => {
-
+        console.log(data);
         vis(data);
 
     });
@@ -70,8 +74,8 @@ class Mapa {
         //this.cria_interpoladores();
 
         ctx1.fillStyle = "#0F6E56";
-        ctx1.strokeStyle = "#F7F3EB";
-        ctx1.lineWidth = 0.3;
+        ctx1.strokeStyle = "#F7F3EB50";
+        ctx1.lineWidth = 1;
 
     }
 
@@ -81,11 +85,14 @@ class Mapa {
 
         poligonos.forEach(poligono => {
 
-                if (poligono.properties.abbrev_state == "PR") {
+                /*
+                if (poligono.properties.pop <= 50000) {
                     ctx1.fillStyle = "dodgerblue";
+                } else if ( (poligono.properties.pop > 50000) & (poligono.properties.pop < 500000) ) {
+                    ctx1.fillStyle = "steelblue"
                 } else {
-                    ctx1.fillStyle = "#0F6E56";
-                }
+                    ctx1.fillStyle = "darksteelblue";
+                }*/ 
 
                 ctx1.beginPath();
                 this.path(poligono);
@@ -97,6 +104,22 @@ class Mapa {
 
     }
 
+    draw_mapa_svg() {
+
+        const poligonos = this.features;
+
+        d3.select("svg.mapa-svg")
+            .selectAll("path")
+            .data(poligonos)
+            .join("path")
+            .attr("d", this.pathSVG)
+            .append("title")
+              .text(d => `${d.properties.name_muni} ( ${d.properties.abbrev_state} ) | ${d.properties.code_muni}`)
+        ;
+
+
+    }
+
     draw_interpolado(t = undefined) {
 
         if (!t) t = this.t;
@@ -104,10 +127,12 @@ class Mapa {
         this.features.forEach(poligono => {
 
                 /*
-                if (poligono.properties.abbrev_state == "PR") {
+                if (poligono.properties.pop <= 50000) {
                     ctx1.fillStyle = "dodgerblue";
+                } else if ( (poligono.properties.pop > 50000) & (poligono.properties.pop < 500000) ) {
+                    ctx1.fillStyle = "steelblue"
                 } else {
-                    ctx1.fillStyle = "#0F6E56";
+                    ctx1.fillStyle = "darksteelblue";
                 }*/
 
                 const pathSVG = poligono.interpolador(t);
@@ -219,7 +244,7 @@ liga.addEventListener("click", e => {
 
     gsap.to(mapa, {
         t : t_final,
-        duration: 3,
+        duration: 5,
         ease: "power1.inOut",
         onUpdate : desenha
     });
