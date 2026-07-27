@@ -36,7 +36,7 @@ h1, h2, h3, h4 {
     left: 0;
     width: 100%;
     height: 700px;
-    border: 2px solid yellow;
+    /*border: 2px solid yellow;*/
 
 }
 
@@ -48,5 +48,10 @@ h1, h2, h3, h4 {
 .mapa-principal {
     width: 100%;
     height: 700px;
-    border: 2px solid tomato;
+    /*border: 2px solid tomato;*/
+}
+
+.mapa-svg path:hover {
+    fill: yellowgreen;
+    cursor: pointer;
 }
