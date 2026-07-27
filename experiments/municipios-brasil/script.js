@@ -21,7 +21,7 @@ cv1.setAttribute("height", h * resolution);
 
 ctx1.setTransform(resolution, 0, 0, resolution, 0, 0);
 
-fetch("areas-ajustadas.json")
+fetch("areas.json")
     .then(response => response.json())
     .then(data => {
         console.log(data);
