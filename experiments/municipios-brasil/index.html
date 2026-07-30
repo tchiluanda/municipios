@@ -43,11 +43,20 @@
                     <button id="liga">vai</button>
                 </p>
 
+                <p>
+                    <select name="mapa terços" id="tercos">
+                        <option value="normal">Mapa normal</option>
+                        <option value="pequeno">Só até 50 mil</option>
+                        <option value="medio">Só entre 50 mil e 415 mil</option>
+                        <option value="grande">Só acima de 415 mil</option>
+                    </select>
+                </p>
+
             </div>
 
 
 
-            <div class="chart-container">
+            <div class="chart-container" data-mode="">
                 <canvas class="mapa-principal"></canvas>
                 <svg class="mapa-svg"></svg>
             </div>

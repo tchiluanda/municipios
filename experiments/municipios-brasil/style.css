@@ -43,7 +43,7 @@ h1, h2, h3, h4 {
 .mapa-svg path {
     stroke: transparent;
     fill: transparent;
-    
+
 }
 
 .mapa-svg path:hover {
@@ -60,6 +60,22 @@ h1, h2, h3, h4 {
 .mapa-svg path:hover {
     fill: yellowgreen;
     cursor: pointer;
+}
+
+.chart-container[data-mode^="tercos"] .mapa-principal {
+    display: none;
+}
+
+.chart-container[data-mode="tercos-pequeno"] .mapa-svg path[data-tamanho="pequeno"] {
+    fill: dodgerblue;
+}
+
+.chart-container[data-mode="tercos-medio"] .mapa-svg path[data-tamanho="medio"] {
+    fill: steelblue;
+}
+
+.chart-container[data-mode="tercos-grande"] .mapa-svg path[data-tamanho="grande"] {
+    fill: navy;
 }
 
 /* abertura */

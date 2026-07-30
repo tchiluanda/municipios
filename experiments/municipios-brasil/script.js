@@ -9,6 +9,8 @@ const ctx0 = cv0.getContext("2d");
 const cv1 = document.querySelector(".mapa-principal");
 const ctx1 = cv1.getContext("2d");
 
+const chart_container = document.querySelector(".chart-container");
+
 const w = +window.getComputedStyle(cv1).width.slice(0,-2);
 const h = +window.getComputedStyle(cv1).height.slice(0,-2);
 
@@ -128,6 +130,7 @@ class Mapa {
             .selectAll("path")
             .data(poligonos)
             .join("path")
+            .attr("data-tamanho", d => d.properties.pop < 50000 ? "pequeno" : d.properties.pop < 415000 ? "medio" : "grande")
             .attr("d", this.pathSVG)
             .append("title")
               .text(d => `${d.properties.name_muni} ( ${d.properties.abbrev_state} ) | ${d.properties.code_muni}`)
@@ -135,6 +138,15 @@ class Mapa {
 
 
     }
+
+    draw_mapa_tercos(sim = true) {
+
+        if (sim) chart_container.dataset.mode = "tercos";
+         else chart_container.dataset.mode = "";       
+
+    }
+
+
 
     draw_interpolado(t = undefined) {
 
@@ -246,6 +258,8 @@ function desenha() {
 
 }
 
+// interações
+
 liga.addEventListener("click", e => {
 
     const t_final = liga.textContent == "vai" ? 1 : 0;
@@ -267,6 +281,20 @@ liga.addEventListener("click", e => {
 
 })
 
+tercos.addEventListener("change", e => {
+
+    const opcao = tercos.value;
+
+    if (opcao == "normal") {
+        mapa.draw_mapa_tercos(false);
+    } else {
+        mapa.draw_mapa_tercos(true);
+        chart_container.dataset.mode = `tercos-${opcao}`;
+    }
+
+    
+})
+
 // helpers
 
 function desenha_municipio_especifico(name_muni) {
@@ -285,4 +313,29 @@ function desenha_municipio_especifico(name_muni) {
     ctx1.fill(); 
     ctx1.stroke();
 
+}
+
+function distribuicao_populacional(cortes = [55000, 415000]) {
+
+    // esse corte de 55 mil e 415 mil equilibra a população em 3 grupos de praticamente 1/3 da população cada.
+    
+    let i = 0;
+
+    return data_.features.map(d => d.properties.pop).reduce( 
+        (ac, cv) => { 
+            let pop, ind; 
+
+            if (i < 10) {
+                console.log(cv, ac);
+                i++;
+            }
+
+            if (cv > cortes[1]) ac[2] += cv; // população acima de 415 mil
+            else if (cv > cortes[0]) ac[1] += cv; // população entre 55 mil e 415 mil
+            else ac[0] += cv; // população abaixo de 55 mil
+            return ac;
+        },
+        
+        [0,0,0]
+    )
 }
