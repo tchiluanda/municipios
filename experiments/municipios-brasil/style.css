@@ -43,6 +43,12 @@ h1, h2, h3, h4 {
 .mapa-svg path {
     stroke: transparent;
     fill: transparent;
+    
+}
+
+.mapa-svg path:hover {
+    stroke: black;
+    fill: gold;
 }
 
 .mapa-principal {
@@ -54,4 +60,35 @@ h1, h2, h3, h4 {
 .mapa-svg path:hover {
     fill: yellowgreen;
     cursor: pointer;
+}
+
+/* abertura */
+
+.abertura {
+
+    width: 100%;
+    height: 90vh;
+    position: relative;
+
+}
+
+.abertura figure {
+    display: block;
+}
+
+h1.titulo-principal {
+    font-size: 5rem;
+    margin: 0;
+    position: absolute;
+    bottom: 33%;
+    left: 0;
+    right: 0;
+    text-align: center;
+
+}
+
+.canvas-abertura {
+    width: 100%;
+    height: 90vh;
+    border: 2px solid var(--destaque);
 }
