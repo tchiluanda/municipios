@@ -1,3 +1,9 @@
+// canvas da abertura
+
+const cv0 = document.querySelector(".canvas-abertura");
+const ctx0 = cv0.getContext("2d");
+
+
 // o force layout só precisa ser calculado para os centroides. e aí podemos ir atualizando os xc? ver como faria para sincronizar
 
 const cv1 = document.querySelector(".mapa-principal");
@@ -11,6 +17,7 @@ function clear() {
 }
 
 let mapa, max_pop, r_scale;
+let data_;
 
 console.log(cv1, w,h);
 
@@ -24,6 +31,7 @@ ctx1.setTransform(resolution, 0, 0, resolution, 0, 0);
 fetch("areas.json")
     .then(response => response.json())
     .then(data => {
+        data_ = data;
         console.log(data);
         vis(data);
 
@@ -67,6 +75,8 @@ class Mapa {
             .translate([ w / 2, h / 2])
         ;
 
+        //projection.fitSize([width, height], object);
+
         this.path = d3.geoPath().projection(this.proj).context(ctx1);
         this.pathSVG = d3.geoPath().projection(this.proj);
 
@@ -80,6 +90,12 @@ class Mapa {
     }
 
     draw_mapa() {
+
+        ctx1.fillStyle = "#0F6E56";
+        ctx1.strokeStyle = "#F7F3EB50";
+        ctx1.lineWidth = 1;
+
+        clear();
 
         const poligonos = this.features;
 
@@ -250,3 +266,23 @@ liga.addEventListener("click", e => {
     });
 
 })
+
+// helpers
+
+function desenha_municipio_especifico(name_muni) {
+
+    const municipio = data_.features.find(d => d.properties.name_muni == name_muni);
+
+    const proj = d3.geoMercator().fitSize([w, h], municipio);
+    const path = d3.geoPath().projection(proj).context(ctx1);
+
+    clear();
+
+    ctx1.fillStyle = "goldenrod";
+    ctx1.strokeStyle = "black";
+    ctx1.beginPath(); 
+    path(municipio); 
+    ctx1.fill(); 
+    ctx1.stroke();
+
+}
