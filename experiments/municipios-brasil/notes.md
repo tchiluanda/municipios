@@ -1,1 +1,3 @@
 Uma solução para o problema dos polígonos múltiplos é descartar os polígonos menores e ficar só com os maiores.
+
+Desenhar contorno do Brasil.
