@@ -19,7 +19,7 @@ function clear() {
 }
 
 let mapa, max_pop, r_scale;
-let data_;
+let data_, brasil_;
 
 console.log(cv1, w,h);
 
@@ -30,12 +30,15 @@ cv1.setAttribute("height", h * resolution);
 
 ctx1.setTransform(resolution, 0, 0, resolution, 0, 0);
 
-fetch("areas.json")
-    .then(response => response.json())
-    .then(data => {
-        data_ = data;
-        console.log(data);
-        vis(data);
+Promise.all([fetch("areas.json"), fetch("brasil.json")])
+    .then(responses => Promise.all(responses.map(response => response.json())))
+    .then(([areas_data, brasil_data]) => {
+
+        data_ = areas_data;
+        brasil_ = brasil_data;
+
+        console.log(areas_data, brasil_data);
+        vis(areas_data);
 
     });
 
@@ -132,8 +135,15 @@ class Mapa {
             .join("path")
             .attr("data-tamanho", d => d.properties.pop < 50000 ? "pequeno" : d.properties.pop < 415000 ? "medio" : "grande")
             .attr("d", this.pathSVG)
+            .classed("municipio", true)
             .append("title")
               .text(d => `${d.properties.name_muni} ( ${d.properties.abbrev_state} ) | ${d.properties.code_muni}`)
+        ;
+
+        d3.select("svg.mapa-svg")
+            .append("path")
+            .classed("brasil", true)
+            .attr("d", this.pathSVG(brasil_.features[0]))
         ;
 
 

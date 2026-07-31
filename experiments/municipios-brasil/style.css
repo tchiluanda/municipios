@@ -46,20 +46,16 @@ h1, h2, h3, h4 {
 
 }
 
-.mapa-svg path:hover {
+.mapa-svg path.brasil {
     stroke: black;
-    fill: gold;
+    fill: transparent;
+    stroke-width: 2px;
 }
 
 .mapa-principal {
     width: 100%;
     height: 700px;
     /*border: 2px solid tomato;*/
-}
-
-.mapa-svg path:hover {
-    fill: yellowgreen;
-    cursor: pointer;
 }
 
 .chart-container[data-mode^="tercos"] .mapa-principal {
@@ -76,6 +72,12 @@ h1, h2, h3, h4 {
 
 .chart-container[data-mode="tercos-grande"] .mapa-svg path[data-tamanho="grande"] {
     fill: navy;
+}
+
+.chart-container[data-mode] .mapa-svg path.municipio:hover {
+    fill: yellowgreen;
+    stroke: black;
+    cursor: pointer;
 }
 
 /* abertura */
